@@ -1,0 +1,31 @@
+Name         = example.dat
+Nodes        = 9
+Arcs         = 13
+
+// List of nodes with coordinates
+Node =  1 , X =  0 , Y =   0 , SUCC = 2 , 4 *
+Node =  2 , X =  1 , Y = -10 , SUCC = 3 , 5 *
+Node =  3 , X =  4 , Y =  -8 , SUCC = 6 , 8 *
+Node =  4 , X =  2 , Y =   2 , SUCC = 6 *
+Node =  5 , X =  3 , Y = -16 , SUCC = 3 , 8 *
+Node =  6 , X =  5 , Y =   0 , SUCC = 7 *
+Node =  7 , X =  6 , Y =   2 , SUCC = 8 , 9 *
+Node =  8 , X =  6 , Y = -14 , SUCC = 9 *
+Node =  9 , X =  7 , Y =  -6 , SUCC = *
+
+// List Of Arcs
+Arc =   1 ,  From =   1 ,  To =  2 ,  Longueur =  10.00 , Duree =    0.0 *
+Arc =   2 ,  From =   1 ,  To =  4 ,  Longueur =   4.00 , Duree =    0.0 *
+Arc =   3 ,  From =   2 ,  To =  3 ,  Longueur =   1.00 , Duree =    0.0 *
+Arc =   4 ,  From =   2 ,  To =  5 ,  Longueur =   2.00 , Duree =    0.0 *
+Arc =   5 ,  From =   3 ,  To =  6 ,  Longueur =   4.00 , Duree =    0.0 *
+Arc =   6 ,  From =   3 ,  To =  8 ,  Longueur =   2.00 , Duree =    0.0 *
+Arc =   7 ,  From =   4 ,  To =  6 ,  Longueur =  12.00 , Duree =    0.0 *
+Arc =   8 ,  From =   5 ,  To =  3 ,  Longueur =   9.00 , Duree =    0.0 *
+Arc =   9 ,  From =   5 ,  To =  8 ,  Longueur =   3.00 , Duree =    0.0 *
+Arc =  10 ,  From =   6 ,  To =  7 ,  Longueur =   5.00 , Duree =    0.0 *
+Arc =  11 ,  From =   7 ,  To =  8 ,  Longueur =   3.00 , Duree =    0.0 *
+Arc =  12 ,  From =   7 ,  To =  9 ,  Longueur =   3.00 , Duree =    0.0 *
+Arc =  13 ,  From =   8 ,  To =  9 ,  Longueur =   3.00 , Duree =    0.0 *
+
+END OF FILE
