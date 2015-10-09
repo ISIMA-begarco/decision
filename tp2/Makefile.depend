@@ -1,2 +1,1 @@
-graph.o: graph.cpp graph.h
-main.o: main.cpp graph.h
+job.o: job.cpp job.h

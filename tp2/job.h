@@ -9,7 +9,7 @@ struct Job
     static const unsigned NO_TIME;
     static const unsigned NO_LOCATION;
 
-  unsigned item_;
+  unsigned item_; 		// Numero de job
   unsigned machine_;
   unsigned duration_;
 
