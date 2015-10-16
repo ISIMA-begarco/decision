@@ -2,16 +2,15 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 class Bierwith {
 	public:
-		std::vector<unsigned int> v_;
+		std::vector<unsigned int> v_; // Le vecteur de B
+		std::vector<unsigned int> jobs_; // Vecteur reperant quelle machine a traiter par job
+		std::vector<job*> machine_; // Vecteur reperant le dernier job machine
 		
-		Bierwith(int nb_jobs, int nb_tasks): v_(nb_jobs*nb_tasks) {
-			for(int i = 0 ; i < nb_tasks*nb_jobs ; ++i) {
-				v_[i] = (int) (i / nb_jobs);
-			}
-		}
+		Bierwith(int, int);
 		
 		void shuffle() {
 			std::random_shuffle(v_.begin(), v_.end());

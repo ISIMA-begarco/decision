@@ -103,3 +103,38 @@ std::ostream & operator<< (std::ostream & os, const Data & d)
   }
   return os;
 }
+void Data::evaluer(const Bierwith & b) {
+	int id, start, machine;
+	Job travail;
+	
+	std::vector<unsigned int> j_; // Vecteur reperant quelle machine a traiter par job
+	std::vector<unsigned int> j_dispo_;
+	
+	std::vector<Job*> m_; // Vecteur reperant le dernier job machine
+	std::vector<unsigned int> m_dispo_;
+	
+	// Initialisation des vector
+	for(unsigned int i = 0; i < nbItems_; i++){
+		jobs_[i] = 0; // TODO si ca f*** mettre des 1
+		jobs_dispo_[i] = 0;
+	}
+	
+	for(unsigned int i = 0; i < nbMachines_; i++) {
+		machine_[i] = nullptr;
+		machine_dispo_[i] = 0;
+	} // end initialization
+	
+	
+	// Parcours du vecteur
+	for(unsigned int i = 0; i < b.v_.size(); i++) { 
+		id = b.v_.at(i); // Quel numero de job on traite
+		start = j_dispo_.at(id); // Date de debut du job
+				machine = j_.at(id); // Machine du job
+		
+		travail = jobs_[id][j_.at(job_id)]; // Recuperation du job dans le tableau principal
+		
+		travail.starting_ = max(j_dispo_.at(id), m_dispo_.at(machine));
+	}
+	
+	
+}
