@@ -46,9 +46,9 @@ Data::Data (const std::string & filename) : name_(filename), jobs_(0), last_cp_(
 
 void Data::clear ()
 {
-  for (auto line : jobs_)
+  for (auto & line : jobs_)
   {
-    for (auto elt : line)
+    for (auto & elt : line)
     {
       elt.clear();
     }
@@ -108,33 +108,48 @@ void Data::evaluer(const Bierwith & b) {
 	Job travail;
 	
 	std::vector<unsigned int> j_; // Vecteur reperant quelle machine a traiter par job
-	std::vector<unsigned int> j_dispo_;
+	std::vector<unsigned int> j_dispo_; // Date de dispo
 	
 	std::vector<Job*> m_; // Vecteur reperant le dernier job machine
-	std::vector<unsigned int> m_dispo_;
+	std::vector<unsigned int> m_dispo_; // Date de dispo
 	
 	// Initialisation des vector
 	for(unsigned int i = 0; i < nbItems_; i++){
-		jobs_[i] = 0; // TODO si ca f*** mettre des 1
-		jobs_dispo_[i] = 0;
+		j_.push_back(0); // TODO si ca f*** mettre des 1
+		j_dispo_.push_back(0);
 	}
 	
 	for(unsigned int i = 0; i < nbMachines_; i++) {
-		machine_[i] = nullptr;
-		machine_dispo_[i] = 0;
-	} // end initialization
-	
+		m_.push_back(0);
+		m_dispo_.push_back(0);
+	}
+	// end initialization
 	
 	// Parcours du vecteur
 	for(unsigned int i = 0; i < b.v_.size(); i++) { 
 		id = b.v_.at(i); // Quel numero de job on traite
 		start = j_dispo_.at(id); // Date de debut du job
-				machine = j_.at(id); // Machine du job
+		machine = j_.at(id); // Machine du job
+		travail = jobs_[id][machine]; // Recuperation du job dans le tableau principal
 		
-		travail = jobs_[id][j_.at(job_id)]; // Recuperation du job dans le tableau principal
 		
-		travail.starting_ = max(j_dispo_.at(id), m_dispo_.at(machine));
+		travail.starting_ = (start >= m_dispo_.at(machine))? start : m_dispo_.at(machine);
+		travail.prev_ = m_.at(machine);
+		travail.location_ = machine;
+		
+		j_dispo_.at(id) =  travail.starting_ + travail.duration_; // change la date de dispo pour le job
+		
+		m_.at(machine) = &travail;
+		m_dispo_.at(machine) = travail.starting_ + travail.duration_;
+		
+		j_.at(id)++;
 	}
 	
-	
+	int makespan = 0;
+	for(unsigned int i = 0 ; i < m_dispo_.size() ; ++i ) {
+		if(m_dispo_[i] > makespan) {
+			makespan = m_dispo_[i];
+		}
+	}
+	std::cout << makespan << std::endl;
 }

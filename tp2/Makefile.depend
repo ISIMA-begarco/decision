@@ -1,1 +1,2 @@
+Bierwith.o: Bierwith.cpp Bierwith.h job.h
 job.o: job.cpp job.h
