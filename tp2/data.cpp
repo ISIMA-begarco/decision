@@ -135,6 +135,8 @@ void Data::evaluer(const Bierwith & b) {
 		
 		travail.starting_ = (start >= m_dispo_.at(machine))? start : m_dispo_.at(machine);
 		travail.prev_ = m_.at(machine);
+//		travail.prev_->next_ = &travail; // Le suivant du precedent c'est moi
+		
 		travail.location_ = machine;
 		
 		j_dispo_.at(id) =  travail.starting_ + travail.duration_; // change la date de dispo pour le job
@@ -142,14 +144,17 @@ void Data::evaluer(const Bierwith & b) {
 		m_.at(machine) = &travail;
 		m_dispo_.at(machine) = travail.starting_ + travail.duration_;
 		
+		// TODO father correspond a l'operation qui a donne la date de debut
+		
 		j_.at(id)++;
 	}
 	
 	int makespan = 0;
 	for(unsigned int i = 0 ; i < m_dispo_.size() ; ++i ) {
+		std::cout << m_dispo_[i] << std::endl;
 		if(m_dispo_[i] > makespan) {
 			makespan = m_dispo_[i];
 		}
 	}
-	std::cout << makespan << std::endl;
+	std::cout << "makespan : " << makespan << std::endl;
 }
