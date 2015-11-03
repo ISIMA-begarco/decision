@@ -18,3 +18,17 @@ std::ostream & operator<< (std::ostream & os, const Job & j)
   os << '(' << j.item_ << ' ' << j.machine_ << ' ' << j.duration_  << ')';
   return os;
 }
+
+Job& Job::operator=(const Job& j) {
+    this->item_ = j.item_;
+    this->machine_ = j.machine_;
+    this->duration_ = j.duration_;
+
+    this->next_ = j.next_;
+    this->prev_ = j.prev_;
+    this->father_ = j.father_;
+    this->starting_ = j.starting_;
+    this->location_ = j.location_;
+
+    return *this;
+}
