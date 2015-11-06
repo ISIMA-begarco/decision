@@ -180,7 +180,7 @@ void Data::rechercheLocale(Bierwith& b, int maxIter) {
     while(amelioration(b) < old_makespan) {
     	old_makespan = makespan_;
     }
-    
+      
     std::cout << "Makespan ameliore " << makespan_;
 }
 

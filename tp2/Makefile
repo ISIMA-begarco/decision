@@ -3,7 +3,7 @@
 ############################## PARAMETRES ##############################
 
 #Choix de l'os pour certaines regles (Windows / Unix)
-OS = Windows
+OS = Unix
 
 #Extention des fichiers
 EXT = cpp

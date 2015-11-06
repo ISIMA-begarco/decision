@@ -29,6 +29,7 @@ class Data {
 
 		int evaluer(const Bierwith &); // retourne le makespan
 		void rechercheLocale(const Bierwith&, int);
+		void amelioration();
 };
 
 std::ostream & operator<< (std::ostream &, const Data &);
