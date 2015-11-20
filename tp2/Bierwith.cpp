@@ -18,3 +18,7 @@ Bierwith& Bierwith::operator=(const Bierwith& b) {
 	}
 	return *this;
 }
+
+unsigned int & Bierwith::at(unsigned int p_indice) {
+    return v_[p_indice];
+}

@@ -1,0 +1,37 @@
+# depslib dependency file v1.0
+1447073008 source:o:\onedrive\github\decision\tp2\main.cpp
+	<iostream>
+	<fstream>
+	"data.h"
+	"job.h"
+	"Bierwith.h"
+
+1446978914 o:\onedrive\github\decision\tp2\data.h
+	"job.h"
+	"Bierwith.h"
+	<vector>
+	<random>
+
+1446978375 o:\onedrive\github\decision\tp2\job.h
+	<iostream>
+	<limits>
+
+1447073309 o:\onedrive\github\decision\tp2\bierwith.h
+	<iostream>
+	<vector>
+	<algorithm>
+	"job.h"
+
+1446979139 source:o:\onedrive\github\decision\tp2\bierwith.cpp
+	"Bierwith.h"
+
+1447074448 source:o:\onedrive\github\decision\tp2\data.cpp
+	"data.h"
+	<fstream>
+	<string>
+	<sstream>
+	<cstdlib>
+
+1446978375 source:o:\onedrive\github\decision\tp2\job.cpp
+	"job.h"
+

@@ -5,14 +5,16 @@
 #include "job.h"
 #include "Bierwith.h"
 
+
 int main(int, char**) {
 	Data * data = new Data("INSTANCES/exemple.dat");
 
 	//data->display_all(std::cout);
 	Bierwith b(3,3);
 
+
 	//while(1) {
-		data->rechercheLocale(b, 10);
+		data->evaluer(b);
 //		b.shuffle();
 	//}
 
@@ -20,3 +22,4 @@ int main(int, char**) {
 
 	return 0;
 }
+

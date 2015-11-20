@@ -105,7 +105,7 @@ std::ostream & operator<< (std::ostream & os, const Data & d)
     return os;
 }
 
-int Data::evaluer(const Bierwith & b) {
+int Data::evaluer(Bierwith & b) {
     unsigned int id, start, machine, makespan = 0;
     Job travail;
 
@@ -149,7 +149,7 @@ int Data::evaluer(const Bierwith & b) {
 
         m_.at(machine) = &travail; // Pointeur sur la derniere operation de la machine
         m_dispo_.at(machine) = travail.starting_ + travail.duration_; // Change dispo pour les machines
-        
+
         travail.id_ = i; // Place dans le vecteur
     } // end parcours
 
@@ -162,11 +162,16 @@ int Data::evaluer(const Bierwith & b) {
             last_cp_ = m_.at(i); // Pour recup le chemin critique apres
 //std::cout << "last_cp_ : " << last_cp_->father_ << std::endl;
         }
+        Job * tmp = last_cp_;
+        while (tmp!=NULL) {
+            std::cout << tmp << tmp->id_ << std::endl;
+            tmp = tmp->father_;
+        }
     }
 
     std::cout << "makespan : " << makespan << std::endl;
 	this->makespan_ = makespan;
-	
+
 	// TODO virer le return car on a l'attribut
     return makespan; // Et on le retourne
 }
@@ -177,20 +182,20 @@ void Data::rechercheLocale(Bierwith& b, int maxIter) {
 
     evaluer(b); // Creation solution initiale
 
-    while(amelioration(b) < old_makespan) {
+    while(this->amelioration(b) < old_makespan) {
     	old_makespan = makespan_;
     }
-    
+
     std::cout << "Makespan ameliore " << makespan_;
 }
 
 int Data::amelioration(Bierwith & b) {
 	int tmp, new_makespan;
-	
+
 	Data graph_prime = *this; // TODO operator = pour copier
 	Bierwith b_prime = b; // Copie sur laquelle on fera les ameliorations
 	Job* cour = graph_prime.last_cp_;
-	
+
 	while(cour != nullptr) {// Parcours chemin critique
 		if(cour->father_ != cour->prev_) { // Disjonctif
 			// Permuter
@@ -198,10 +203,10 @@ int Data::amelioration(Bierwith & b) {
 			b_prime.at(cour->id_) = b_prime.at(cour->prev_->id_);
 			b_prime.at(cour->prev_->id_) = tmp;
 		}
-		
+
 		graph_prime.evaluer(b_prime);
-	
-		if(graph_prime->makespan_ < this->makespan_) {
+
+		if(graph_prime.makespan_ < this->makespan_) {
 			b = b_prime;
 			*this = graph_prime;
 			cour = nullptr;
@@ -209,6 +214,6 @@ int Data::amelioration(Bierwith & b) {
 			cour = cour->father_;
 		}
 	}
-	
+
 	return this->makespan_;
 }

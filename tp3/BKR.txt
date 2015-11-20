@@ -1,0 +1,82 @@
+C101 	10	 828.94 	RT
+C102 	10	 828.94 	RT
+C103 	10	 828.06 	RT
+C104 	10	 824.78 	RT
+C105 	10	 828.94 	RT
+C106 	10	 828.94 	RT
+C107 	10	 828.94 	RT
+C108 	10	 828.94 	RT
+C109 	10	 828.94 	RT
+
+C201	 3	 591.56 	RT
+C202 	 3	 591.56 	RT
+C203 	 3	 591.17 	RT
+C204 	 3	 590.60 	RT
+C205 	 3	 588.88 	RT
+C206 	 3	 588.49 	RT
+C207 	 3	 588.29 	RT
+C208 	 3	 588.32 	RT
+
+R101	19	1645.79 	H
+R102 	17	1486.12 	RT
+R103 	13	1292.68 	LLH
+R104 	 9	1007.24 	MBD
+R105 	14	1377.11 	RT
+R106 	12	1251.98 	MBD
+R107 	10	1104.66 	S97
+R108 	 9	 960.88 	BBB
+R109 	11	1194.73 	HG
+R110 	10	1118.59 	MBD
+R111	10	1096.72 	RGP
+R112	 9	 982.14 	GTA
+
+R201	 4	1252.37 	HG
+R202 	 3	1191.70 	RGP
+R203 	 3	 939.50 	WL	2009-10-21
+R204 	 2	 825.52 	BVH
+R205 	 3	 994.42 	RGP
+R206 	 3	 906.14 	SSSD
+R207 	 2	 890.61 	RP	2005-02-25
+R208 	 2	 726.75 	MBD
+R209 	 3	 909.16 	H
+R210 	 3	 939.34 	MBD
+R211	 2	 885.71 	WL	2009-10-21
+
+RC101	14	1696.94 	TBGGP
+RC102 	12	1554.75 	TBGGP
+RC103 	11	1261.67 	S98
+RC104 	10	1135.48 	CLM
+RC105 	13	1629.44 	BBB
+RC106 	11	1424.73 	BBB
+RC107 	11	1230.48 	S97
+RC108 	10	1139.82 	TBGGP
+
+RC201	 4	1406.91 	MBD
+RC202 	 3	1365.65 	GCC	2004-03-22
+RC203 	 3	1049.62 	CC
+RC204 	 3	 798.41 	MBD
+RC205 	 4	1297.19 	MBD
+RC206 	 3	1146.32 	H
+RC207 	 3	1061.14 	BVH
+RC208 	 3	 828.14 	IKMUY
+
+-------------------------------------------
+BBB - J. Berger, M. Barkaoui and O. Bräysy, "A Parallel Hybrid Genetic Algorithm for the Vehicle Routing Problem with Time Windows," Working paper, Defense Research Establishment Valcartier, Canada, 2001.
+BVH - R. Bent and P. Van Hentenryck, "A Two-Stage Hybrid Local Search for the Vehicle Routing Problem with Time Windows," Technical Report CS-01-06, Department of Computer Science, Brown University, 2001.
+CC - Z. J. Czech and P. Czarnas, "A Parallel Simulated Annealing for the Vehicle Routing Problem with Time Windows," Proc. 10th Euromicro Workshop on Parallel, Distributed and Network-based Processing, Canary Islands, Spain, (January 9--11, 2002), 376--383.
+CLM - J.-F. Cordeau,  G. Laporte, and A. Mercier, "A Unified Tabu Search Heuristic for Vehicle Routing Problems with Time Windows," Working Paper CRT-00-03, Centre for Research on Transportation, Montreal, Canada, 2000.
+GCC - Agnieszka Debudaj-Grabysz, Zbigniew J.Czech and Piotr Czarnas Silesia University of Technology and University of Wroclaw, Poland (2004)
+GTA - L. M. Gambardella, E. Taillard, and G. Agazzi, "MACS-VRPTW: A Multiple Ant Colony System for Vehicle Routing Problems with Time Windows," in New Ideas in Optimization, D. Corne, M. Dorigo and F. Glover (eds), 63-76, McGraw-Hill, London, 1999.
+H - J. Homberger, "Verteilt-parallele Metaheuristiken zur Tourenplanung," Gaber, Wiesbaden (2000).
+HG - J. Homberger and H. Gehring, "Two Evolutionary Metaheuristics for the Vehicle Routing Problem with Time Windows," INFOR, VOL. 37, 297-318, (1999).
+IKMUY - T. Ibaraki, M. Kubo, T. Masuda, T. Uno and M. Yagiura, "Effective Local Search Algorithms for the Vehicle Routing Problem with General Time Windows," Working Paper, Department of Applied Mathematics and Physics, Kyoto University, Japan, 2001.
+MBD - D. Mester, O. Bräysy and W. Dullaert. A Multi-parametric Evolution Strategies Algorithm for Vehicle Routing Problems. Working Paper, Institute of Evolution, University of Haifa, Israel (2005).
+LLH - H. Li, A. Lim, and J. Huang, "Local Search with Annealing-like Restarts to Solve the VRPTW," Working Paper, Department of Computer Science, National University of Singapore, 2001.
+RGP - L.M. Rousseau, M. Gendreau and G. Pesant, "Using Constraint-Based Operators to Solve the Vehicle Routing Problem with Time Windows," Journal of Heuristics, forthcoming.
+RP - S. Ropke & D.Pisinger. "A general heuristic for vehicle routing problems",  technical report, Department of Computer Science, University of Copenhagen.
+RT - Y. Rochat and E.D. Taillard, "Probabilistic Diversification and Intensification in Local Search for Vehicle Routing," Journal of Heuristics 1, 147-167, (1995).
+SSSD - G. Schrimpf, J. Schneider, H. Stamm-Wilbrandt and G. Dueck, "Record Breaking Optimization Results Using the Ruin and Recreate Principle," Journal of Computational Physics 159, 139-171, (2000).
+S97 - P. Shaw, "A New Local Search Algorithm Providing High Quality Solutions to Vehicle Routing Problems," Working Paper, University of Strathclyde, Glasgow, Scotland, 1997.
+S98 - P. Shaw, "Using Constraint Programming and Local Search Methods to Solve Vehicle Routing Problems," In Principles and Practice of Constraint Programming - CP98, Lecture Notes in Computer Science, 417-431, M. Maher and J.-F. Puget (eds), Springer-Verlag, New York, 1998.
+TBGGP - E. Taillard, P. Badeau, M. Gendreau, F. Geurtin, and J.Y. Potvin, "A Tabu Search Heuristic for the Vehicle Routing Problem with Time Windows," Transportation Science, 31, 170-186, (1997).
+WL - Woch M., Łebkowski P.: Sequential Simulated Annealing for the Vehicle Routing Problem with Time Windows. Decision Making in Manufacturing and Services, vol. 3, no. 1-2., s. 87-100, 2009.

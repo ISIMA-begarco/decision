@@ -1,0 +1,48 @@
+# depslib dependency file v1.0
+1447403306 source:o:\onedrive\cours\zz2\oad\tp3\tp3_base\tp3_base\tp3_base\bkr.cpp
+	"bkr.h"
+	<fstream>
+	<algorithm>
+
+1447403306 o:\onedrive\cours\zz2\oad\tp3\tp3_base\tp3_base\tp3_base\bkr.h
+	"data.h"
+
+1447403306 o:\onedrive\cours\zz2\oad\tp3\tp3_base\tp3_base\tp3_base\data.h
+	<string>
+	<iostream>
+	<vector>
+	<list>
+
+1447403620 source:o:\onedrive\cours\zz2\oad\tp3\tp3_base\tp3_base\tp3_base\data.cpp
+	"data.h"
+	<fstream>
+	<sstream>
+	<limits>
+	<cmath>
+	<algorithm>
+	<cassert>
+
+1447404142 source:o:\onedrive\cours\zz2\oad\tp3\tp3_base\tp3_base\tp3_base\main.cpp
+	"bkr.h"
+	"algorithms.h"
+	<iostream>
+	<iomanip>
+	<chrono>
+	<random>
+
+1447404193 o:\onedrive\cours\zz2\oad\tp3\tp3_base\tp3_base\tp3_base\algorithms.h
+	"workingsolution.h"
+
+1447403306 o:\onedrive\cours\zz2\oad\tp3\tp3_base\tp3_base\tp3_base\workingsolution.h
+	"data.h"
+
+1447404262 source:o:\onedrive\cours\zz2\oad\tp3\tp3_base\tp3_base\tp3_base\workingsolution.cpp
+	"workingsolution.h"
+	<limits>
+	<algorithm>
+	<cassert>
+	<list>
+	<fstream>
+	<sstream>
+	<cstdlib>
+

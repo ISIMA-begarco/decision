@@ -1,0 +1,36 @@
+fusion
+tant que possible 
+	fusionner des tournées (concaténation)
+	i = fin de tournée
+	j = début de tournée
+	2 tests :
+		capacité : demande(tour(i))+demande(tour(j)) < Q
+		Fenetre de temps :	calculer date d'arrivée sur j en partant de i
+							vérifier sur FenetreDeTemps[i]
+							Progpager au suivant
+							
+	pour tout arc i,j calcul gain gij = ci0 + c0j - cij   (arc.saving = -gij)
+	trier les arcs selon gij décroissant
+	
+	pour arc(ij) appartenant à ordre
+		tester si (ij) est tq i = fin et j = debut
+			si oui
+				vérifier respect capacité
+				Si ok
+					vérifier respect fenetre de temps
+						si ok	
+							fusionner
+							
+							
+							
+				
+				
+insertion
+	On part d'une solution vide
+	Ouvrir une tournée vide
+	tant qu'il existe client non traité
+		rechercher le client non traité dont l'insertion à la fin de la tournée courante est valide et coute le moins cher.
+		Si le client existe
+			l'insérer à la fin de la tournée courante
+		sinon
+			ouvrir une nouvelle tournée vide
