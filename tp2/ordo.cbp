@@ -14,6 +14,7 @@
 				<Compiler>
 					<Add option="-std=c++11" />
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -23,6 +24,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -40,6 +42,8 @@
 		<Unit filename="job.cpp" />
 		<Unit filename="job.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="population.cpp" />
+		<Unit filename="population.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

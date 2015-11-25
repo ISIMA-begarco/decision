@@ -161,12 +161,14 @@ int Data::evaluer(Bierwith & b) {
 
 void Data::rechercheLocale(Bierwith& b, int maxIter) {
     unsigned int new_makespan, old_makespan=makespan_;
+    int i = 0;
     bool stop = false;
 
     evaluer(b); // Creation solution initiale
 
-    while(this->amelioration(b) < old_makespan) {
+    while(this->amelioration(b) < old_makespan && i < maxIter) {
     	old_makespan = makespan_;
+    	i++;
     }
 
     std::cout << "Makespan ameliore " << makespan_;
