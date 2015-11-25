@@ -106,74 +106,57 @@ std::ostream & operator<< (std::ostream & os, const Data & d)
 }
 
 int Data::evaluer(Bierwith & b) {
-    unsigned int id, start, machine, makespan = 0;
-    Job * travail;
+    std::vector<Job*>       last_job_on_machine_(this->nbMachines_, NULL);
+    std::vector<unsigned>   dispo_machine(this->nbMachines_, 0);
+    std::vector<unsigned>   last_op_on_job_(this->nbItems_, -1);
+    std::vector<unsigned>   dispo_job(this->nbItems_, 0);
+    Job * travail = NULL;
 
-    std::vector<unsigned int> j_; // Vecteur reperant quelle machine a traiter par job
-    std::vector<unsigned int> j_dispo_; // Date de dispo
 
-    std::vector<Job*> m_; // Vecteur reperant le dernier job machine
-    std::vector<unsigned int> m_dispo_; // Date de dispo
+    for(int i = 0 ; i < b.v_.size() ; ++i) {
+        unsigned    id_job = b.v_[i];
+        travail = &(jobs_[id_job][last_op_on_job_[id_job]+1]);
+        unsigned    id_machine = travail->machine_;
 
-    // Initialisation des vector
-    for(unsigned int i = 0; i < nbItems_; i++){
-        j_.push_back(0);
-        j_dispo_.push_back(0);
-    }
+        if(dispo_job[id_job] < dispo_machine[id_machine]) {
+            travail->starting_ = dispo_machine[id_machine];
+            dispo_machine[id_machine] += travail->duration_;
+            dispo_job[id_job] = dispo_machine[id_machine];
 
-    for(unsigned int i = 0; i < nbMachines_; i++) {
-        m_.push_back(0);
-        m_dispo_.push_back(0);
-    }
-    // end initialization
+            travail->father_ = last_job_on_machine_[id_machine];
+        } else {
+            travail->starting_ = dispo_job[id_job];
+            dispo_job[id_job] += travail->duration_;
+            dispo_machine[id_machine] = dispo_job[id_job];
 
-    // Parcours du vecteur
-    for(unsigned int i = 0; i < b.v_.size(); i++) {
-        id = b.v_.at(i);                // Quel numero de job on traite
-        start = j_dispo_.at(id);        // Date de debut du job
-        machine = j_.at(id);            // Machine du job
-        travail = &(jobs_[id][machine]);   // Recuperation du job dans tableau principal
+            travail->father_ = last_op_on_job_[id_job] == -1 ? NULL : &(this->jobs_[id_job][last_op_on_job_[id_job]]);
+        }
 
-        /* Change les attributs du job en cours de traitement */
-        travail->starting_ = (start >= m_dispo_.at(machine))? start : m_dispo_.at(machine); // Change date de start
-        travail->location_ = machine; // Change la machine du job
-
-        travail->prev_ = m_.at(machine); // Change le pecedent de ce job
-        //travail.prev_->next_ =  &travail; // Je suis le suivant du job precedent
-
-        travail->father_ = (start >= m_dispo_.at(machine))? m_.at(j_.at(id)) : m_.at(machine);
-
-        // Modification des vecteurs pour continuer
-        j_.at(id)++; // La prochaine fois le job se fait sur la machine suivante
-        j_dispo_.at(id) =  travail->starting_ + travail->duration_; // change la date de dispo pour le job
-
-        m_.at(machine) = travail; // Pointeur sur la derniere operation de la machine
-        m_dispo_.at(machine) = travail->starting_ + travail->duration_; // Change dispo pour les machines
-
+        travail->prev_ = last_job_on_machine_[id_machine];
         travail->id_ = i; // Place dans le vecteur
-    } // end parcours
 
-    // Recherche du makespan
-    makespan = 0;
-    for(unsigned int i = 0 ; i < m_dispo_.size() ; ++i) {
-        //std::cout << m_dispo_[i] << std::endl; // Affiche temps de fin
-        if(m_dispo_[i] > makespan) {
-            makespan = m_dispo_[i];
-            last_cp_ = m_.at(i); // Pour recup le chemin critique apres
-//std::cout << "last_cp_ : " << last_cp_->father_ << std::endl;
-        }
-        Job * tmp = last_cp_;
-        while (tmp!=NULL) {
-            std::cout << tmp << " " << tmp->id_ << std::endl;
-            tmp = tmp->father_;
+        last_job_on_machine_[id_machine] = travail;
+        last_op_on_job_[id_job]++;
+    }
+
+    // recherche du makespan
+    makespan_ = 0;
+    for(int j = 0 ; j < dispo_job.size() ; j++) {
+        if(dispo_job[j] > makespan_) {
+            makespan_ = dispo_job[j];
+            last_cp_ = &(this->jobs_[j][last_op_on_job_[j]]);
         }
     }
 
-    std::cout << "makespan : " << makespan << std::endl;
-	this->makespan_ = makespan;
+    /// affichage du resultat
+    std::cout << "Le makespan est : " << makespan_ << std::endl;
+    travail = last_cp_;
+    while(travail != NULL){
+        std::cout << *travail << std::endl;
+        travail = travail->father_;
+    }
 
-	// TODO virer le return car on a l'attribut
-    return makespan; // Et on le retourne
+    return makespan_;
 }
 
 void Data::rechercheLocale(Bierwith& b, int maxIter) {
