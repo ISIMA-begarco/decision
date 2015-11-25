@@ -7,6 +7,8 @@
 #include "data.h"
 #include "Bierwith.h"
 
+class Data;
+
 class Population
 {
     public:
@@ -18,8 +20,10 @@ class Population
         std::vector<Data *> m_pop;    // Contient toutes les solutions
         bool solutionDouble(const Data&) const;
 
+        void croisement();
+        void mutation();
+        void garderMeilleurs(Population&);
 
-    protected:
 };
 
 #endif // POPULATION_H

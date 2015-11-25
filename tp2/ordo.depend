@@ -58,16 +58,26 @@
 	"job.h"
 	"Bierwith.h"
 
-1448481197 c:\users\benji\github\decision\tp2\data.h
+1448487605 c:\users\benji\github\decision\tp2\data.h
 	"job.h"
 	"Bierwith.h"
+	"population.h"
 	<vector>
 	<random>
 
-1448481197 source:c:\users\benji\github\decision\tp2\data.cpp
+1448487639 source:c:\users\benji\github\decision\tp2\data.cpp
 	"data.h"
 	<fstream>
 	<string>
 	<sstream>
 	<cstdlib>
+
+1448487586 c:\users\benji\github\decision\tp2\population.h
+	<iostream>
+	<vector>
+	"data.h"
+	"Bierwith.h"
+
+1448487561 source:c:\users\benji\github\decision\tp2\population.cpp
+	"population.h"
 

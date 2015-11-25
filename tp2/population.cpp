@@ -16,7 +16,7 @@ Population::Population(int taille, Data& d) {
         copie.evaluer(bVector); // Reevalue
 
         if(!solutionDouble(copie)) { // On a pas deja cette solution dans le vecteur
-            this->m_pop.push_back(new Data(copie)); /// TODO constructeur par copie
+            this->m_pop.push_back(new Data(copie)); /// TODO constructeur par copie de Data
             i++;
         } // Sinon on en fait une autre
 
@@ -42,6 +42,18 @@ bool Population::solutionDouble(const Data& d) const{
 
     return ret;
 
+}
+
+void Population::croisement() {
+    /// TODO
+}
+
+void Population::mutation() {
+    /// TODO
+}
+
+void Population::garderMeilleurs(Population& p_prime) {
+    /// TODO
 }
 
 Population::~Population() {

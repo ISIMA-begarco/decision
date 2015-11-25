@@ -31,7 +31,7 @@ class Data {
 		int evaluer(Bierwith &); // retourne le makespan
 		void rechercheLocale(Bierwith&, int);
 		int amelioration(Bierwith&);
-		void algorithmeGenetique(int); // L'entier est la taille de la population
+		void algorithmeGenetique(int, int); // L'entier est la taille de la population
 };
 
 std::ostream & operator<< (std::ostream &, const Data &);
