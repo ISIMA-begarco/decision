@@ -35,3 +35,39 @@
 1446978375 source:o:\onedrive\github\decision\tp2\job.cpp
 	"job.h"
 
+1448477504 source:c:\users\benji\github\decision\tp2\bierwith.cpp
+	"Bierwith.h"
+
+1448477504 c:\users\benji\github\decision\tp2\bierwith.h
+	<iostream>
+	<vector>
+	<algorithm>
+	"job.h"
+
+1447251695 c:\users\benji\github\decision\tp2\job.h
+	<iostream>
+	<limits>
+
+1446546318 source:c:\users\benji\github\decision\tp2\job.cpp
+	"job.h"
+
+1448480559 source:c:\users\benji\github\decision\tp2\main.cpp
+	<iostream>
+	<fstream>
+	"data.h"
+	"job.h"
+	"Bierwith.h"
+
+1448481197 c:\users\benji\github\decision\tp2\data.h
+	"job.h"
+	"Bierwith.h"
+	<vector>
+	<random>
+
+1448481197 source:c:\users\benji\github\decision\tp2\data.cpp
+	"data.h"
+	<fstream>
+	<string>
+	<sstream>
+	<cstdlib>
+

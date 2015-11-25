@@ -218,12 +218,8 @@ int Data::amelioration(Bierwith & b) {
 	return this->makespan_;
 }
 
-void Data::algorithmeGenetique(int n, int k) {
+void Data::algorithmeGenetique(int n) {
     // Generation de la population
     Population p(n);
-
-    for(unsigned int i = 0; i < k; i++) {
-
-    }
 
 }

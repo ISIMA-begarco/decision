@@ -2,6 +2,7 @@
 
 #include "job.h"
 #include "Bierwith.h"
+#include "population.h"
 
 #include <vector>
 #include <random>
@@ -30,6 +31,7 @@ class Data {
 		int evaluer(Bierwith &); // retourne le makespan
 		void rechercheLocale(Bierwith&, int);
 		int amelioration(Bierwith&);
+		void algorithmeGenetique(int); // L'entier est la taille de la population
 };
 
 std::ostream & operator<< (std::ostream &, const Data &);
