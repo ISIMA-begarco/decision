@@ -9,17 +9,16 @@
 
 class Data;
 
-class Population
-{
+class Population {
     public:
+        int m_taille;               // taille de la population
+        std::vector<Data *> m_pop;    // Contient toutes les solutions
+
         Population();
         Population(int, Data&);
         virtual ~Population();
 
-        int m_taille;               // taille de la population
-        std::vector<Data *> m_pop;    // Contient toutes les solutions
         bool solutionDouble(const Data&) const;
-
         void croisement();
         void mutation();
         void garderMeilleurs(Population&);
