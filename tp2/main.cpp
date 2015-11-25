@@ -18,7 +18,7 @@ int main(int, char**) {
 //		b.shuffle();
 	//}
 
-
+data->display_all(std::cout);
 
 	return 0;
 }

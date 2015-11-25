@@ -107,7 +107,7 @@ std::ostream & operator<< (std::ostream & os, const Data & d)
 
 int Data::evaluer(Bierwith & b) {
     unsigned int id, start, machine, makespan = 0;
-    Job travail;
+    Job * travail;
 
     std::vector<unsigned int> j_; // Vecteur reperant quelle machine a traiter par job
     std::vector<unsigned int> j_dispo_; // Date de dispo
@@ -132,25 +132,25 @@ int Data::evaluer(Bierwith & b) {
         id = b.v_.at(i);                // Quel numero de job on traite
         start = j_dispo_.at(id);        // Date de debut du job
         machine = j_.at(id);            // Machine du job
-        travail = jobs_[id][machine];   // Recuperation du job dans tableau principal
+        travail = &(jobs_[id][machine]);   // Recuperation du job dans tableau principal
 
         /* Change les attributs du job en cours de traitement */
-        travail.starting_ = (start >= m_dispo_.at(machine))? start : m_dispo_.at(machine); // Change date de start
-        travail.location_ = machine; // Change la machine du job
+        travail->starting_ = (start >= m_dispo_.at(machine))? start : m_dispo_.at(machine); // Change date de start
+        travail->location_ = machine; // Change la machine du job
 
-        travail.prev_ = m_.at(machine); // Change le pecedent de ce job
+        travail->prev_ = m_.at(machine); // Change le pecedent de ce job
         //travail.prev_->next_ =  &travail; // Je suis le suivant du job precedent
 
-        travail.father_ = (start >= m_dispo_.at(machine))? m_.at(j_.at(id)) : m_.at(machine);
+        travail->father_ = (start >= m_dispo_.at(machine))? m_.at(j_.at(id)) : m_.at(machine);
 
         // Modification des vecteurs pour continuer
         j_.at(id)++; // La prochaine fois le job se fait sur la machine suivante
-        j_dispo_.at(id) =  travail.starting_ + travail.duration_; // change la date de dispo pour le job
+        j_dispo_.at(id) =  travail->starting_ + travail->duration_; // change la date de dispo pour le job
 
-        m_.at(machine) = &travail; // Pointeur sur la derniere operation de la machine
-        m_dispo_.at(machine) = travail.starting_ + travail.duration_; // Change dispo pour les machines
+        m_.at(machine) = travail; // Pointeur sur la derniere operation de la machine
+        m_dispo_.at(machine) = travail->starting_ + travail->duration_; // Change dispo pour les machines
 
-        travail.id_ = i; // Place dans le vecteur
+        travail->id_ = i; // Place dans le vecteur
     } // end parcours
 
     // Recherche du makespan
@@ -164,7 +164,7 @@ int Data::evaluer(Bierwith & b) {
         }
         Job * tmp = last_cp_;
         while (tmp!=NULL) {
-            std::cout << tmp << tmp->id_ << std::endl;
+            std::cout << tmp << " " << tmp->id_ << std::endl;
             tmp = tmp->father_;
         }
     }
