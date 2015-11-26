@@ -6,6 +6,8 @@ Individu::Individu(Bierwith bVector, unsigned makespan) : m_bVector(bVector), m_
 
 Individu::~Individu() { /* nothing to do */}
 
+/******************************************************************************/
+
 bool compareIndividu::operator()(const Individu& i1, const Individu& i2) const {
     return (i1.m_makespan < i2.m_makespan);
 }
@@ -13,6 +15,8 @@ bool compareIndividu::operator()(const Individu& i1, const Individu& i2) const {
 bool compareIndividu::operator()(const Individu* i1, const Individu* i2) const {
     return (i1->m_makespan < i2->m_makespan);
 }
+
+/******************************************************************************/
 
 //Population::Population() { std::cerr << "Erreur constructeur par defaut population"; } // A ne pas utiliser de toute facon
 
@@ -34,17 +38,13 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
 
     m_pop.reserve(m_taille); // Reserve la taille de la population
 
-    Bierwith bVector(m_machine, m_item); /// TODO peut etre pas le bon ordre?
+    Bierwith bVector(m_item, m_machine); /// TODO est dans l'ordre
 
     while(i < m_taille) {
         makespan = copieData.evaluer(bVector); // Reevalue
-        code = copieData.hash(m_taillePresence);
-        
-std::cout << code << std::endl;
-
-        if(m_presence[code] == 0) { // On a pas deja cette solution dans le tableau de presence
+std::cout << makespan << " ";
+        if(!solutionDouble(copieData)) { // On a pas deja cette solution dans le tableau de presence
             this->m_pop.push_back(new Individu(bVector, makespan));
-            m_presence[code]++;
             i++;
         }
         // Sinon on en fait une autre
@@ -75,21 +75,21 @@ void Population::select() {
 }
 
 // Teste si cette solutin est deja dans le vecteur ou non
-/*bool Population::solutionDouble(const Bierwith& b) const{
-    int code = 0;
-    bool ret = false;
+bool Population::solutionDouble(const Data& d) {
+    bool ret = true;
+    int code;
+    code = d.hash(m_taillePresence);
 
-    code = b.hash();
-std::cout << code << std::endl;
+    std::cout << "Hash Data : " << code << std::endl;
 
-    for(unsigned int i = 0; !ret && i < m_pop.size() ; i++) {
-        ret = (code == m_pop[i]->m_bVector.hash());
+    if(m_presence[code] == 0) {
+        m_presence[code]++;
+        ret = false;
     }
-//std::cout << ret;
-    return ret;
 
+    return ret;
 }
-*/
+
 // Cree un enfant en croisant 2 individus
 Bierwith Population::croisement(Bierwith & bon, Bierwith & mauvais) {
     Bierwith fils(bon.item_, bon.machine_);
@@ -117,18 +117,6 @@ Bierwith Population::croisement(Bierwith & bon, Bierwith & mauvais) {
     return fils;
 }
 
-void Population::garderMeilleurs(Population& p_prime) {
-    /// TODO
-}
-
-Population::~Population() {
-    // Vidage du vecteur
-    for(unsigned int i = 0; i < m_pop.size(); i++) {
-        if(m_pop[i])
-            delete(m_pop[i]);
-    }
-}
-
 // Regenere un certain pourcentage de la fin de la population
 void Population::regen(double rate, const Data & d) {
     int debut = (int)((double)m_taille*rate);
@@ -143,20 +131,24 @@ void Population::regen(double rate, const Data & d) {
             //Data copieData = d;
             makespan = copieData.evaluer(bVector); // Reevalue
 
-            if( (++m_presence[copieData.hash(m_taillePresence)]) == 1) { // On a pas deja cette solution dans le vecteur
+            if(!solutionDouble(copieData)) { // On a pas deja cette solution dans le vecteur
                 this->m_pop.push_back(new Individu(bVector, makespan));
                 i++;
             }
 
             bVector.shuffle(); // Melange pour refaire une solution
     }
-
+    this->sort();
 }
 
-std::ostream & operator<< (std::ostream & os, const Population & p) {
-    os << "Affichage de la population : taille = " << p.m_pop.size() << "\n";
-    for(unsigned int i = 0; i < p.m_pop.size(); i++) {
-        os << p.m_pop[i]->m_makespan << " - ";
+Population::~Population() {
+    // Vidage du vecteur
+    for(unsigned int i = 0; i < m_pop.size(); i++) {
+        if(m_pop[i])
+            delete(m_pop[i]);
     }
-    os << "\n";
+}
+
+void Population::printAll() const {
+    
 }

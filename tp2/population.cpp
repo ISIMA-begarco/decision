@@ -42,7 +42,7 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
 
     while(i < m_taille) {
         makespan = copieData.evaluer(bVector); // Reevalue
-std::cout << makespan << " ";
+
         if(!solutionDouble(copieData)) { // On a pas deja cette solution dans le tableau de presence
             this->m_pop.push_back(new Individu(bVector, makespan));
             i++;
@@ -58,12 +58,6 @@ std::cout << makespan << " ";
 // Trie selon le makespan et affihe
 void Population::sort() {
     std::sort(m_pop.begin(), m_pop.end(), compareIndividu());
-
-    std::cout << "Vecteur de population (makespan)" << std::endl;
-    for(unsigned int j; j < m_pop.size(); j++) {
-        std::cout << m_pop[j]->m_makespan << " ";
-    }
-    std::cout << std::endl;
 }
 
 void Population::select() {
@@ -80,7 +74,7 @@ bool Population::solutionDouble(const Data& d) {
     int code;
     code = d.hash(m_taillePresence);
 
-    std::cout << "Hash Data : " << code << std::endl;
+    //std::cout << "Hash Data : " << code << std::endl;
 
     if(m_presence[code] == 0) {
         m_presence[code]++;
@@ -149,3 +143,11 @@ Population::~Population() {
     }
 }
 
+void Population::printAll() const {
+    std::cout << "Affichage des makespan de la population" << std::endl;
+    for(int a = 0; a < this->m_pop.size(); a++) {
+        std::cout << this->m_pop[a]->m_makespan << " - ";
+    }
+
+    std::cout << std::endl;
+}

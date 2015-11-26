@@ -51,7 +51,7 @@ class Population {
         bool solutionDouble(const Data&);
         Bierwith croisement(Bierwith & bon, Bierwith & mauvais);
         void mutation();
-
+        void printAll() const ;
 };
 
 #endif // POPULATION_H
