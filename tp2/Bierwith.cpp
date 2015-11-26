@@ -11,7 +11,7 @@ Bierwith::Bierwith(int nb_jobs, int nb_tasks): v_(nb_jobs*nb_tasks) {
 }
 
 Bierwith::Bierwith(const Bierwith& b) {
-    this->v_.reserve(b.v_.size());
+    this->v_.resize(b.v_.size());
     this->item_ = b.item_;
     this->machine_ = b.machine_;
     for(unsigned int i = 0; i < b.v_.size(); i++) {
@@ -23,6 +23,8 @@ Bierwith::Bierwith(const Bierwith& b) {
 Bierwith& Bierwith::operator=(const Bierwith& b) {
 	//v_(b.v_.size()); // TODO regler ca ...
     this->v_.resize(b.v_.size());
+    this->item_ = b.item_;
+    this->machine_ = b.machine_;
 	for(unsigned int i = 0 ; i < b.v_.size(); i++) {
 		this->v_[i] = b.v_[i];
 	}
