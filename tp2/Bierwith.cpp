@@ -30,3 +30,10 @@ std::ostream & operator<< (std::ostream & os, const Bierwith & b)
     }
     return os;
 }
+
+Bierwith::Bierwith(const Bierwith& b) {
+    this->v_.reserve(b.v_.size());
+    for(unsigned int i = 0; i < b.v_.size(); i++) {
+        this->v_[i] = b.v_[i];
+    }
+}

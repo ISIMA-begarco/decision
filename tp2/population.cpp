@@ -1,31 +1,42 @@
 #include "population.h"
 
-Population::Population() {std::cerr << "Erreur de population";} // A ne pas utiliser de toute facon
+Individu::Individu() { std::cerr << "Erreur constructeur par defaut ondividu"; }
+
+Individu::Individu(Bierwith bVector, unsigned makespan) : m_bVector(b), m_makespan(makespan) {}
+
+Individu::~Individu() { /* nothing to do */}
+
+bool compareIndividu::operator()(const Individu& i1, const Individu& i2) const {
+    return (i1.m_makespan < i2.m_makespan);
+}
+
+Population::Population() { std::cerr << "Erreur constructeur par defaut population"; } // A ne pas utiliser de toute facon
 
 // Initialisation de la population
-Population::Population(int taille, Data& d) : m_taille(taille) {
+Population::Population(int taille, const Data& d) : m_taille(taille) {
     // Initialise le vecteur
-    int i = 0;
-    Data copie = d;
+    int i = 0, makespan = 0;
+    Data copieData = d;
 
-    m_item = copie.nbItems_;
-    m_machine = copie.nbMachines_;
-    m_pop.reserve(m_taille);
+    m_item = copieData.nbItems_;
+    m_machine = copieData.nbMachines_;
 
-    Bierwith bVector(d.nbMachines_, d.nbItems_); /// TODO peut etre pas le bon ordre?
+    m_pop.reserve(m_taille); // Reserve la taille de la population
+
+    Bierwith bVector(m_machine, m_item); /// TODO peut etre pas le bon ordre?
 
     while(i < m_taille) {
-        copie.evaluer(bVector); // Reevalue
+        makespan = copie.evaluer(bVector); // Reevalue
 
-        if(!solutionDouble(copie)) { // On a pas deja cette solution dans le vecteur
-            this->m_pop.push_back(new Data(copie)); /// TODO constructeur par copie de Data
+        if(!solutionDouble(bVector)) { // On a pas deja cette solution dans le vecteur
+            this->m_pop.push_back(new Individu(bVector, makespan)); /// TODO constructeur par copie de Data
             i++;
         } // Sinon on en fait une autre
 
         bVector.shuffle(); // Melange pour refaire une solution
     }
 
-    std::sort(m_pop.begin(), m_pop.end(), compareData()); // Pour trier selon le makespan
+    std::sort(m_pop.begin(), m_pop.end(), compareIndividu()); // Pour trier selon le makespan
 
 }
 

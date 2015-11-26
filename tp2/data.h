@@ -37,8 +37,3 @@ class Data {
 };
 
 std::ostream & operator<< (std::ostream &, const Data &);
-
-class compareData {
-public:
-	bool operator()(const Data*, const Data*) const;
-};

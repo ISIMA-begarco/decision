@@ -39,7 +39,7 @@
 1448522018 source:c:\users\benji\github\decision\tp2\bierwith.cpp
 	"Bierwith.h"
 
-1448522018 c:\users\benji\github\decision\tp2\bierwith.h
+1448545544 c:\users\benji\github\decision\tp2\bierwith.h
 	<iostream>
 	<vector>
 	<algorithm>
@@ -73,11 +73,9 @@
 	<sstream>
 	<cstdlib>
 
-1448525095 c:\users\benji\github\decision\tp2\population.h
+1448545544 c:\users\benji\github\decision\tp2\population.h
 	<iostream>
 	<vector>
-	<deque>
-	<queue>
 	<algorithm>
 	"data.h"
 	"Bierwith.h"
