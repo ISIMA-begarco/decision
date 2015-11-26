@@ -18,8 +18,15 @@ bool compareIndividu::operator()(const Individu* i1, const Individu* i2) const {
 
 // Initialisation de la population
 Population::Population(int taille, const Data& d) : m_taille(taille) {
+    int i = 0, makespan = 0, code = 0;
+
+    m_taillePresence = 10000000;
+    // Init tableau de presence
+    for(unsigned int i = 0; i < m_taillePresence; i++) {
+        m_presence.push_back(0);
+    }
+
     // Initialise le vecteur
-    int i = 0, makespan = 0;
     Data copieData = d;
 
     m_item = copieData.nbItems_;
@@ -31,9 +38,13 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
 
     while(i < m_taille) {
         makespan = copieData.evaluer(bVector); // Reevalue
+        code = copieData.hash(m_taillePresence);
+        
+std::cout << code << std::endl;
 
-        if(!solutionDouble(bVector)) { // On a pas deja cette solution dans le vecteur
+        if(m_presence[code] == 0) { // On a pas deja cette solution dans le tableau de presence
             this->m_pop.push_back(new Individu(bVector, makespan));
+            m_presence[code]++;
             i++;
         }
         // Sinon on en fait une autre
@@ -56,6 +67,7 @@ void Population::sort() {
 }
 
 void Population::select() {
+    this->sort();
     // On garde le nombre de personnes de base
     while(m_pop.size() > m_taille) {
         m_pop.pop_back();
@@ -63,20 +75,21 @@ void Population::select() {
 }
 
 // Teste si cette solutin est deja dans le vecteur ou non
-bool Population::solutionDouble(const Bierwith& b) const{
+/*bool Population::solutionDouble(const Bierwith& b) const{
     int code = 0;
     bool ret = false;
 
     code = b.hash();
+std::cout << code << std::endl;
 
     for(unsigned int i = 0; !ret && i < m_pop.size() ; i++) {
-        ret = code == m_pop[i]->m_bVector.hash();
+        ret = (code == m_pop[i]->m_bVector.hash());
     }
-
+//std::cout << ret;
     return ret;
 
 }
-
+*/
 // Cree un enfant en croisant 2 individus
 Bierwith Population::croisement(Bierwith & bon, Bierwith & mauvais) {
     Bierwith fils(bon.item_, bon.machine_);
@@ -130,14 +143,14 @@ void Population::regen(double rate, const Data & d) {
             //Data copieData = d;
             makespan = copieData.evaluer(bVector); // Reevalue
 
-            if(!solutionDouble(bVector)) { // On a pas deja cette solution dans le vecteur
+            if( (++m_presence[copieData.hash(m_taillePresence)]) == 1) { // On a pas deja cette solution dans le vecteur
                 this->m_pop.push_back(new Individu(bVector, makespan));
                 i++;
             }
 
             bVector.shuffle(); // Melange pour refaire une solution
     }
-    
+
 }
 
 std::ostream & operator<< (std::ostream & os, const Population & p) {

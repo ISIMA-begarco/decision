@@ -18,8 +18,15 @@ bool compareIndividu::operator()(const Individu* i1, const Individu* i2) const {
 
 // Initialisation de la population
 Population::Population(int taille, const Data& d) : m_taille(taille) {
+    int i = 0, makespan = 0, code = 0;
+
+    m_taillePresence = 10000000;
+    // Init tableau de presence
+    for(unsigned int i = 0; i < m_taillePresence; i++) {
+        m_presence.push_back(0);
+    }
+
     // Initialise le vecteur
-    int i = 0, makespan = 0;
     Data copieData = d;
 
     m_item = copieData.nbItems_;
@@ -32,7 +39,7 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
     while(i < m_taille) {
         makespan = copieData.evaluer(bVector); // Reevalue
 
-        if(!solutionDouble(bVector)) { // On a pas deja cette solution dans le vecteur
+        if(!solutionDouble(copieData)) { // On a pas deja cette solution dans le tableau de presence
             this->m_pop.push_back(new Individu(bVector, makespan));
             i++;
         }
@@ -56,6 +63,7 @@ void Population::sort() {
 }
 
 void Population::select() {
+    this->sort();
     // On garde le nombre de personnes de base
     while(m_pop.size() > m_taille) {
         m_pop.pop_back();
@@ -63,18 +71,19 @@ void Population::select() {
 }
 
 // Teste si cette solutin est deja dans le vecteur ou non
-bool Population::solutionDouble(const Bierwith& b) const{
-    int code = 0;
-    bool ret = false;
+bool Population::solutionDouble(const Data& d) {
+    bool ret = true;
+    int code;
+    code = d.hash(m_taillePresence);
 
-    code = b.hash();
+    std::cout << "Hash Data : " << code << std::endl;
 
-    for(unsigned int i = 0; !ret && i < m_pop.size() ; i++) {
-        ret = code == m_pop[i]->m_bVector.hash();
+    if(m_presence[code] == 0) {
+        m_presence[code]++;
+        ret = false;
     }
 
     return ret;
-
 }
 
 // Cree un enfant en croisant 2 individus
@@ -130,7 +139,7 @@ void Population::regen(double rate, const Data & d) {
             //Data copieData = d;
             makespan = copieData.evaluer(bVector); // Reevalue
 
-            if(!solutionDouble(bVector)) { // On a pas deja cette solution dans le vecteur
+            if(!solutionDouble(copieData)) { // On a pas deja cette solution dans le vecteur
                 this->m_pop.push_back(new Individu(bVector, makespan));
                 i++;
             }

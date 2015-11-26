@@ -37,6 +37,8 @@ class Population {
         int m_item;             // Nombre d'items dans nos datas
         int m_machine;          // Nombre de machines des data qu'on manipule
         std::vector<Individu *> m_pop;      // Contient toutes les solutions
+        std::vector<unsigned> m_presence;
+        int m_taillePresence;
 
         //Population();
         Population(int, const Data&);
@@ -46,7 +48,7 @@ class Population {
         void select();
         void regen(double, const Data&);
 
-        bool solutionDouble(const Bierwith&) const;
+        bool solutionDouble(const Data&);
         Bierwith croisement(Bierwith & bon, Bierwith & mauvais);
         void mutation();
         void garderMeilleurs(Population&);

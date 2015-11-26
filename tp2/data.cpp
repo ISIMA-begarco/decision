@@ -225,8 +225,12 @@ unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
     int i = 0, noAmelioration = 0, taillePopulationHalf, indiv1, indiv2;
     unsigned makespan = -1, makespanOld = -1;
 
+std::cout << "Initialisation de la population ..." << std::endl;
+
     Population p(taillePopulation, *this); // Initialise la population
     taillePopulationHalf = int(p.m_taille/2);
+
+std::cout << "Population initialisee" << std::endl;
 
     while(i < maxIter) {
         /* On double la taille de notre population */
@@ -235,6 +239,8 @@ unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
             indiv1 = this->rng_engine_() % (int)((double)taillePopulation*0.1); // Prend dans les 10%
             indiv2 = this->rng_engine_() % (taillePopulation - (int)((double)taillePopulation*0.9)) + (int)((double)taillePopulation*0.1); // tire le reste
 
+std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
+
             // Obtention de l'enfant
             Bierwith lambda = p.croisement(p.m_pop[indiv1]->m_bVector, p.m_pop[indiv2]->m_bVector); // Nouveau vecteur
             makespan = this->rechercheLocale(lambda, maxIter);
@@ -242,8 +248,7 @@ unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
             // Ajout de l'enfant dans le vecteur
             p.m_pop.push_back(new Individu(lambda, makespan));
         }
-        p.sort();
-        p.select();
+        p.select(); // On sort avant de select donc c'est bon
 
         std::cout << p << std::endl;
 
@@ -259,6 +264,7 @@ unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
 
             // On regenere les 90% fin de la population
             p.regen(0.9, *this);
+            p.sort();
         }
         i++;
     }
@@ -294,4 +300,16 @@ Data& Data::operator=(const Data& d) {
     this->rng_engine_ = d.rng_engine_;
 
     return *this;
+}
+
+int Data::hash(int modulo) const {
+    int code = 0;
+
+    for(unsigned int i = 0; i < nbItems_; i++) {
+        for(unsigned int j = 0; j < nbMachines_; j++) {
+            code = code + (jobs_[i][j].starting_ * jobs_[i][j].starting_);
+        }
+    }
+
+    return (code % modulo);
 }
