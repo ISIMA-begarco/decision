@@ -5,9 +5,15 @@
 #include <sstream>
 #include <cstdlib>
 
-Data::Data() :
-    
-{}
+Data::Data(int items, int machines) :
+    name_ ("Enfant"), nbItems_(items), nbMachines_(machines), last_cp_(nullptr), makespan_(-1) {
+
+    jobs_.reserve(items);
+
+    for(unsigned int i = 0; i < jobs_.size(); i++) {
+        jobs_[i].reserve(machines);
+    }
+}
 
 Data::Data (const std::string & filename) : name_(filename), jobs_(0), last_cp_(nullptr) {
     makespan_ = -1; // Plus grand entier on signe
@@ -213,15 +219,25 @@ int Data::amelioration(Bierwith & b) {
 	return this->makespan_;
 }
 
-void Data::algorithmeGenetique(int n, int k) {
+void Data::algorithmeGenetique(int iterMax) {
     /// Algo genetique suivant les notes du prof
-    Population p(n, *this), p_prime;
+    int i = 0;
+    Population p(100, *this);
 
-    for(unsigned int i = 0; i < k; i++) {
-        p_prime = p;
-        p_prime.croisement(); /// TODO
-        p_prime.mutation(); /// TODO
-        p.garderMeilleurs(p_prime); /// TODO
+
+    while(i < iterMax) {
+        for(unsigned int j = 0; j < 50; i++) {
+            // Choisir p1 dans 1-5
+            // Choisir p2 dans 6 50
+            // lambda = croisement (p1, p2)
+            // recherche locale (lambda) -> lambda
+            // remplacer un element par lambda 80% p2 et 20% p1
+        }
+
+        if() {
+
+        }
+        
     }
 
 }
@@ -251,8 +267,4 @@ Data& Data::operator=(const Data& d) {
     this->rng_engine_ = d.rng_engine_;
 
     return *this;
-}
-
-bool compareData::operator()(const Data& d1, const Data& d2) const {
-    return (d1.makespan_ < d2.makespan_);
 }

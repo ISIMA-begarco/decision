@@ -38,3 +38,14 @@ std::ostream & operator<< (std::ostream & os, const Bierwith & b)
     }
     return os;
 }
+
+// Hashcode de bierwith, fais la somme des carres
+long Bierwith::hash() const {
+    long code = 0;
+
+    for(unsigned int i = 0; i < this->v_.size(); i++) {
+        code += v_[i]*v_[i];
+    }
+
+    return code;
+}

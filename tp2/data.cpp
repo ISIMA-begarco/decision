@@ -219,12 +219,30 @@ int Data::amelioration(Bierwith & b) {
 	return this->makespan_;
 }
 
-void Data::algorithmeGenetique(int n, int k) {
+void Data::algorithmeGenetique(int iterMax) {
     /// Algo genetique suivant les notes du prof
-    Population p(n, *this);
+    int i = 0, noAmelioration = 0;
+    Population p(100, *this);
 
-    for(unsigned int i = 0; i < k; i++) {
 
+    while(i < iterMax) {
+        for(unsigned int j = 0; j < 50; i++) {
+            // Choisir p1 dans 1-5
+            // Choisir p2 dans 6 50
+            // lambda = croisement (p1, p2)
+            // recherche locale (lambda) -> lambda
+            // remplacer un element par lambda 80% p2 et 20% p1
+        }
+
+        if( /* pas d'amelioration */) {
+            noAmelioration++;
+        } else {
+            noAmelioration = 0;
+        }
+
+        if(noAmelioration == 10) {
+            // regenere aleatoirement de 6 a 50
+        }
     }
 
 }

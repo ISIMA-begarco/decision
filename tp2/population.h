@@ -26,6 +26,7 @@ class Individu {
 class compareIndividu {
 public:
         bool operator()(const Individu&, const Individu&) const;
+        bool operator()(const Individu*, const Individu*) const;
 };
 
 class Population {

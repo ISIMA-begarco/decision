@@ -37,12 +37,16 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
         bVector.shuffle(); // Melange pour refaire une solution
     }
 
-    // Tri selon le makespan croissant
+    this->trier();
+}
+
+// Trie selon le makespan et affihe
+void Population::trier() {
     std::sort(*m_pop.begin(), *m_pop.end(), compareIndividu());
 
     std::cout << "Vecteur de population (makespan)" << std::endl;
     for(unsigned int j; j < m_pop.size(); j++) {
-        std::cout << m_pop[i]->m_makespan << " ";
+        std::cout << m_pop[j]->m_makespan << " ";
     }
     std::cout << std::endl;
 }
@@ -52,7 +56,7 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
 bool Population::solutionDouble(const Bierwith& b) const{
     bool ret = false;
 
-    /// TODO avec fonction de hash
+    while(!ret && i < this->m_pop.si)
 
     return ret;
 
@@ -64,7 +68,9 @@ void Population::croisement() {
     // Cherche le premier individu dans les 10% meilleurs
     indiv1 = m_mt() % (unsigned)((double)m_taille*0.1);
     // Cherche l'autre dans le reste
-    indiv2 = m_mt() % 
+    indiv2 = m_mt() % (m_taille - (unsigned)((double)m_taille*0.1)) + (unsigned)((double)m_taille*0.1);
+
+
 }
 
 void Population::mutation() {

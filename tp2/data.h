@@ -32,7 +32,7 @@ class Data {
 		int evaluer(Bierwith &); // retourne le makespan
 		void rechercheLocale(Bierwith&, int);
 		int amelioration(Bierwith&);
-		void algorithmeGenetique(int, int); // L'entier est la taille de la population
+		void algorithmeGenetique(int = 100); // L'entier est la taille de la population
 		Data& operator=(const Data&);
 };
 

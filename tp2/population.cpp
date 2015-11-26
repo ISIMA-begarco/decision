@@ -10,6 +10,10 @@ bool compareIndividu::operator()(const Individu& i1, const Individu& i2) const {
     return (i1.m_makespan < i2.m_makespan);
 }
 
+bool compareIndividu::operator()(const Individu* i1, const Individu* i2) const {
+    return (i1->m_makespan < i2->m_makespan);
+}
+
 //Population::Population() { std::cerr << "Erreur constructeur par defaut population"; } // A ne pas utiliser de toute facon
 
 // Initialisation de la population
@@ -42,7 +46,7 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
 
 // Trie selon le makespan et affihe
 void Population::trier() {
-    std::sort(*m_pop.begin(), *m_pop.end(), compareIndividu());
+    std::sort(m_pop.begin(), m_pop.end(), compareIndividu());
 
     std::cout << "Vecteur de population (makespan)" << std::endl;
     for(unsigned int j; j < m_pop.size(); j++) {
@@ -54,9 +58,14 @@ void Population::trier() {
 
 // Teste si cette solutin est deja dans le vecteur ou non
 bool Population::solutionDouble(const Bierwith& b) const{
+    int code = 0;
     bool ret = false;
 
-    /// TODO avec fonction de hash
+    code = b.hash();
+
+    for(unsigned int i = 0; !ret && i < m_pop.size() ; i++) {
+        ret = code == m_pop[i]->m_bVector.hash();
+    }
 
     return ret;
 

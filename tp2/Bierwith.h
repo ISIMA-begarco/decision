@@ -19,6 +19,7 @@ class Bierwith {
 
 		Bierwith& operator=(const Bierwith&);
 		unsigned int & at(unsigned int);
+		long hash() const;
 };
 
 std::ostream & operator<< (std::ostream & os, const Bierwith & b);
