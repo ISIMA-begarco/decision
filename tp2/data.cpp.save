@@ -54,8 +54,7 @@ Data::Data (const std::string & filename) : name_(filename), jobs_(0), last_cp_(
     }
 }
 
-void Data::clear ()
-{
+void Data::clear () {
     for (auto & line : jobs_)
     {
         for (auto & elt : line)
@@ -76,8 +75,7 @@ void Data::clear ()
 }
 
 
-void Data::display_all (std::ostream & os) const
-{
+void Data::display_all (std::ostream & os) const {
     os << "instance " << name_ << ": " << nbItems_ << " items " << nbMachines_ << " machines" << std::endl;
     for (auto & line : jobs_)
     {
@@ -100,8 +98,7 @@ void Data::display_all (std::ostream & os) const
 }
 
 
-std::ostream & operator<< (std::ostream & os, const Data & d)
-{
+std::ostream & operator<< (std::ostream & os, const Data & d) {
     os << "instance " << d.name_ << ": " << d.nbItems_ << " items " << d.nbMachines_ << " machines" << std::endl;
     for (auto & line : d.jobs_)
     {
@@ -224,18 +221,23 @@ int Data::amelioration(Bierwith & b) {
 unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
     int i = 0, noAmelioration = 0, taillePopulationHalf, indiv1, indiv2;
     unsigned makespan = -1, makespanOld = -1;
+
 std::cout << "Initialisation de la population ..." << std::endl;
+
     Population p(taillePopulation, *this); // Initialise la population
     taillePopulationHalf = int(p.m_taille/2);
+
 std::cout << "Population initialisee" << std::endl;
 
     while(i < maxIter) {
         /* On double la taille de notre population */
-        for(unsigned int j = 0; j < taillePopulationHalf; i++) {
+        for(unsigned int j = 0; j < taillePopulationHalf; j++) {
             // Tirage des individus
             indiv1 = this->rng_engine_() % (int)((double)taillePopulation*0.1); // Prend dans les 10%
             indiv2 = this->rng_engine_() % (taillePopulation - (int)((double)taillePopulation*0.9)) + (int)((double)taillePopulation*0.1); // tire le reste
+
 std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
+
             // Obtention de l'enfant
             Bierwith lambda = p.croisement(p.m_pop[indiv1]->m_bVector, p.m_pop[indiv2]->m_bVector); // Nouveau vecteur
             makespan = this->rechercheLocale(lambda, maxIter);
@@ -243,10 +245,7 @@ std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
             // Ajout de l'enfant dans le vecteur
             p.m_pop.push_back(new Individu(lambda, makespan));
         }
-        p.sort();
-        p.select();
-
-        std::cout << p << std::endl;
+        p.select(); // On sort avant de select donc c'est bon
 
         if(makespan == makespanOld) { // On compte les cas stationnaires
             noAmelioration++;
@@ -259,8 +258,7 @@ std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
             noAmelioration = 0;
 
             // On regenere les 90% fin de la population
-            p.regen(0.9, *this);
-            p.sort();
+            p.regen(0.9, *this); // On sort apres donc ok
         }
         i++;
     }
@@ -300,12 +298,12 @@ Data& Data::operator=(const Data& d) {
 
 int Data::hash(int modulo) const {
     int code = 0;
-    
+
     for(unsigned int i = 0; i < nbItems_; i++) {
         for(unsigned int j = 0; j < nbMachines_; j++) {
-            code = code + (jobs_[i][j] * jobs_[i][j]);
+            code = code + (jobs_[i][j].starting_ * jobs_[i][j].starting_);
         }
     }
-    
+
     return (code % modulo);
 }

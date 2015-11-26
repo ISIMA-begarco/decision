@@ -51,10 +51,7 @@ class Population {
         bool solutionDouble(const Data&);
         Bierwith croisement(Bierwith & bon, Bierwith & mauvais);
         void mutation();
-        void garderMeilleurs(Population&);
 
 };
-
-std::ostream & operator<< (std::ostream &, const Population &);
 
 #endif // POPULATION_H

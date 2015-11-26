@@ -54,8 +54,7 @@ Data::Data (const std::string & filename) : name_(filename), jobs_(0), last_cp_(
     }
 }
 
-void Data::clear ()
-{
+void Data::clear () {
     for (auto & line : jobs_)
     {
         for (auto & elt : line)
@@ -76,8 +75,7 @@ void Data::clear ()
 }
 
 
-void Data::display_all (std::ostream & os) const
-{
+void Data::display_all (std::ostream & os) const {
     os << "instance " << name_ << ": " << nbItems_ << " items " << nbMachines_ << " machines" << std::endl;
     for (auto & line : jobs_)
     {
@@ -100,8 +98,7 @@ void Data::display_all (std::ostream & os) const
 }
 
 
-std::ostream & operator<< (std::ostream & os, const Data & d)
-{
+std::ostream & operator<< (std::ostream & os, const Data & d) {
     os << "instance " << d.name_ << ": " << d.nbItems_ << " items " << d.nbMachines_ << " machines" << std::endl;
     for (auto & line : d.jobs_)
     {
@@ -234,10 +231,10 @@ std::cout << "Population initialisee" << std::endl;
 
     while(i < maxIter) {
         /* On double la taille de notre population */
-        for(unsigned int j = 0; j < taillePopulationHalf; i++) {
+        for(unsigned int j = 0; j < taillePopulationHalf; j++) {
             // Tirage des individus
-            indiv1 = this->rng_engine_() % (int)((double)taillePopulation*0.1); // Prend dans les 10%
-            indiv2 = this->rng_engine_() % (taillePopulation - (int)((double)taillePopulation*0.9)) + (int)((double)taillePopulation*0.1); // tire le reste
+            indiv1 = this->rng_engine_() % (int)(((double)taillePopulation)*0.1); // Prend dans les 10%
+            indiv2 = this->rng_engine_() % (taillePopulation - (int)(((double)taillePopulation)*0.9)) + (int)((double)taillePopulation*0.1); // tire le reste
 
 std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
 
@@ -250,8 +247,6 @@ std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
         }
         p.select(); // On sort avant de select donc c'est bon
 
-        std::cout << p << std::endl;
-
         if(makespan == makespanOld) { // On compte les cas stationnaires
             noAmelioration++;
         } else { // Sinon on a ameliore
@@ -263,8 +258,7 @@ std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
             noAmelioration = 0;
 
             // On regenere les 90% fin de la population
-            p.regen(0.9, *this);
-            p.sort();
+            p.regen(0.9, *this); // On sort apres donc ok
         }
         i++;
     }

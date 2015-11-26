@@ -6,6 +6,8 @@ Individu::Individu(Bierwith bVector, unsigned makespan) : m_bVector(bVector), m_
 
 Individu::~Individu() { /* nothing to do */}
 
+/******************************************************************************/
+
 bool compareIndividu::operator()(const Individu& i1, const Individu& i2) const {
     return (i1.m_makespan < i2.m_makespan);
 }
@@ -13,6 +15,8 @@ bool compareIndividu::operator()(const Individu& i1, const Individu& i2) const {
 bool compareIndividu::operator()(const Individu* i1, const Individu* i2) const {
     return (i1->m_makespan < i2->m_makespan);
 }
+
+/******************************************************************************/
 
 //Population::Population() { std::cerr << "Erreur constructeur par defaut population"; } // A ne pas utiliser de toute facon
 
@@ -34,7 +38,7 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
 
     m_pop.reserve(m_taille); // Reserve la taille de la population
 
-    Bierwith bVector(m_machine, m_item); /// TODO peut etre pas le bon ordre?
+    Bierwith bVector(m_item, m_machine); /// TODO peut etre pas le bon ordre?
 
     while(i < m_taille) {
         makespan = copieData.evaluer(bVector); // Reevalue
@@ -113,18 +117,6 @@ Bierwith Population::croisement(Bierwith & bon, Bierwith & mauvais) {
     return fils;
 }
 
-void Population::garderMeilleurs(Population& p_prime) {
-    /// TODO
-}
-
-Population::~Population() {
-    // Vidage du vecteur
-    for(unsigned int i = 0; i < m_pop.size(); i++) {
-        if(m_pop[i])
-            delete(m_pop[i]);
-    }
-}
-
 // Regenere un certain pourcentage de la fin de la population
 void Population::regen(double rate, const Data & d) {
     int debut = (int)((double)m_taille*rate);
@@ -146,13 +138,14 @@ void Population::regen(double rate, const Data & d) {
 
             bVector.shuffle(); // Melange pour refaire une solution
     }
-
+    this->sort();
 }
 
-std::ostream & operator<< (std::ostream & os, const Population & p) {
-    os << "Affichage de la population : taille = " << p.m_pop.size() << "\n";
-    for(unsigned int i = 0; i < p.m_pop.size(); i++) {
-        os << p.m_pop[i]->m_makespan << " - ";
+Population::~Population() {
+    // Vidage du vecteur
+    for(unsigned int i = 0; i < m_pop.size(); i++) {
+        if(m_pop[i])
+            delete(m_pop[i]);
     }
-    os << "\n";
 }
+
