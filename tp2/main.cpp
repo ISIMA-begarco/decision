@@ -8,14 +8,12 @@
 
 int main(int argc, char** argv) {
 	Data * data;
-/*
+
 	if(argc>1) {
         data = new Data(argv[1]);
-    } else {*/
+    } else {
         data = new Data("INSTANCES/la01.dat");
-  //  }
-
-    data->display_all(std::cout);
+    }
 
 	Bierwith b(data->nbItems_, data->nbMachines_);
     b.shuffle();
