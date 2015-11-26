@@ -18,3 +18,5 @@ class Bierwith {
 		Bierwith& operator=(const Bierwith&);
 		unsigned int & at(unsigned int);
 };
+
+std::ostream & operator<< (std::ostream & os, const Bierwith & b);

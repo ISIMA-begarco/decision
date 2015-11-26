@@ -6,19 +6,22 @@
 #include "Bierwith.h"
 
 
-int main(int, char**) {
-	Data * data = new Data("INSTANCES/exemple.dat");
+int main(int argv, char** argc) {
+	Data * data;
 
-	//data->display_all(std::cout);
-	Bierwith b(3,3);
+	if(argv==2)
+        data = new Data(argc[1]);
+    else
+        data = new Data("INSTANCES/la20.dat");
+
+	Bierwith b(data->nbItems_, data->nbMachines_);
+    b.shuffle();
 
 
-	//while(1) {
-		data->evaluer(b);
-//		b.shuffle();
-	//}
+    //data->evaluer(b);
+    data->rechercheLocale(b, 10);
 
-data->display_all(std::cout);
+    delete data;
 
 	return 0;
 }

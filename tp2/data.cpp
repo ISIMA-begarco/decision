@@ -112,7 +112,6 @@ int Data::evaluer(Bierwith & b) {
     std::vector<unsigned>   dispo_job(this->nbItems_, 0);
     Job * travail = NULL;
 
-
     for(int i = 0 ; i < b.v_.size() ; ++i) {
         unsigned    id_job = b.v_[i];
         travail = &(jobs_[id_job][last_op_on_job_[id_job]+1]);
@@ -149,13 +148,13 @@ int Data::evaluer(Bierwith & b) {
     }
 
     /// affichage du resultat
-    std::cout << "Le makespan est : " << makespan_ << std::endl;
+/**    std::cout << "Le makespan est : " << makespan_ << std::endl;
     travail = last_cp_;
     while(travail != NULL){
         std::cout << *travail << std::endl;
         travail = travail->father_;
     }
-
+**/
     return makespan_;
 }
 
@@ -171,32 +170,40 @@ void Data::rechercheLocale(Bierwith& b, int maxIter) {
     	i++;
     }
 
-    std::cout << "Makespan ameliore " << makespan_;
+    std::cout << "Makespan ameliore " << makespan_ /**<< " avec b = " << b**/ << std::endl;
 }
 
 int Data::amelioration(Bierwith & b) {
-	int tmp, new_makespan;
+	int tmp;
 
-	Data graph_prime = *this; // TODO operator = pour copier
+	Data graph_prime = *this; // operator = pour copier
 	Bierwith b_prime = b; // Copie sur laquelle on fera les ameliorations
 	Job* cour = graph_prime.last_cp_;
 
-	while(cour != nullptr) {// Parcours chemin critique
-		if(cour->father_ != cour->prev_) { // Disjonctif
-			// Permuter
+	while(cour != NULL && cour->father_ != NULL) {// Parcours chemin critique
+
+		while(cour != NULL && cour->father_ != NULL && cour->father_ != cour->prev_) { //  recherche Disjonctif
+            cour = cour->father_;
+		}
+
+		if(cour != NULL && cour->father_ != NULL) {
+			/// Permuter
+			//std::cout << "Inversion : " << *cour << *(cour->father_) << std::endl;
 			tmp = b_prime.at(cour->id_);
 			b_prime.at(cour->id_) = b_prime.at(cour->prev_->id_);
 			b_prime.at(cour->prev_->id_) = tmp;
-		}
 
-		graph_prime.evaluer(b_prime);
+            /// evaluation apres permutation
+            graph_prime.evaluer(b_prime);
 
-		if(graph_prime.makespan_ < this->makespan_) {
-			b = b_prime;
-			*this = graph_prime;
-			cour = nullptr;
-		} else {
-			cour = cour->father_;
+            /// verification amelioration
+            if(graph_prime.makespan_ < this->makespan_) {
+                b = b_prime;
+                (*this) = graph_prime;
+                cour = NULL;
+            } else {
+                cour = cour->father_;
+            }
 		}
 	}
 
@@ -214,4 +221,31 @@ void Data::algorithmeGenetique(int n, int k) {
         p.garderMeilleurs(p_prime); /// TODO
     }
 
+}
+
+Data& Data::operator=(const Data& d) {
+    this->name_ = d.name_;
+    this->nbItems_ = d.nbItems_;
+    this->nbMachines_ = d.nbMachines_;
+
+    this->jobs_.resize(this->nbItems_);
+    for (unsigned i = 0; i < this->nbItems_; ++i) {
+        this->jobs_[i].resize(this->nbMachines_);
+        for(int j = 0 ; j < d.jobs_[i].size() ; j++) {
+            this->jobs_[i][j] = d.jobs_[i][j];
+        }
+    }
+    int k = 0;
+    while(k < this->nbItems_ && (jobs_[k][nbMachines_-1].starting_ + jobs_[k][nbMachines_-1].duration_) != makespan_) {
+        k++;
+    }
+    if(k < nbItems_)
+        last_cp_ = &(jobs_[k][nbMachines_-1]);
+    else
+        last_cp_ = NULL;
+
+    this->makespan_ = d.makespan_;
+    this->rng_engine_ = d.rng_engine_;
+
+    return *this;
 }

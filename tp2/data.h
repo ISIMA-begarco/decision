@@ -32,6 +32,7 @@ class Data {
 		void rechercheLocale(Bierwith&, int);
 		int amelioration(Bierwith&);
 		void algorithmeGenetique(int, int); // L'entier est la taille de la population
+		Data& operator=(const Data&);
 };
 
 std::ostream & operator<< (std::ostream &, const Data &);
