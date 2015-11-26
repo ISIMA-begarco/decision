@@ -23,6 +23,7 @@ class Data {
 
 		std::mt19937 rng_engine_;
 
+		Data(int, int);
 		Data (const std::string &);
 		void clear ();
 
@@ -36,3 +37,8 @@ class Data {
 };
 
 std::ostream & operator<< (std::ostream &, const Data &);
+
+class compareData {
+public:
+	bool operator()(const Data*, const Data*) const;
+};

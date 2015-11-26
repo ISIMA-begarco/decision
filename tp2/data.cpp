@@ -5,6 +5,15 @@
 #include <sstream>
 #include <cstdlib>
 
+Data::Data(int items, int machines) :
+    name_ ("Enfant"), nbItems_(items), nbMachines_(machines), last_cp_(nullptr), makespan_(-1) {
+
+    jobs_.reserve(items);
+
+    for(unsigned int i = 0; i < jobs_.size(); i++) {
+        jobs_[i].reserve(machines);
+    }
+}
 
 Data::Data (const std::string & filename) : name_(filename), jobs_(0), last_cp_(nullptr) {
     makespan_ = -1; // Plus grand entier on signe
@@ -248,4 +257,8 @@ Data& Data::operator=(const Data& d) {
     this->rng_engine_ = d.rng_engine_;
 
     return *this;
+}
+
+bool compareData::operator()(const Data* d1, const Data* d2) const {
+    return (d1->makespan_ < d2->makespan_);
 }
