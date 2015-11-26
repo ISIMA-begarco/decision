@@ -137,6 +137,7 @@ void Population::regen(double rate, const Data & d) {
 
             bVector.shuffle(); // Melange pour refaire une solution
     }
+
 }
 
 std::ostream & operator<< (std::ostream & os, const Population & p) {

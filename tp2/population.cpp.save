@@ -117,16 +117,17 @@ Population::~Population() {
 }
 
 // Regenere un certain pourcentage de la fin de la population
-void Population::regen(double rate) {
+void Population::regen(double rate, const Data & d) {
     int debut = (int)((double)m_taille*rate);
     unsigned makespan = 0;
+    Data copieData = d;
     Bierwith bVector(m_machine, m_item); /// TODO peut etre pas le bon ordre?
-    
+    bVector.shuffle(); // Sinon on retombre directement dans le tout premier cas ajoute
+
     int i = debut;
-    
+
     while(i < m_taille) {
             //Data copieData = d;
-            
             makespan = copieData.evaluer(bVector); // Reevalue
 
             if(!solutionDouble(bVector)) { // On a pas deja cette solution dans le vecteur
@@ -135,8 +136,8 @@ void Population::regen(double rate) {
             }
 
             bVector.shuffle(); // Melange pour refaire une solution
-        }
     }
+    
 }
 
 std::ostream & operator<< (std::ostream & os, const Population & p) {

@@ -221,7 +221,7 @@ int Data::amelioration(Bierwith & b) {
 	return this->makespan_;
 }
 
-void Data::algorithmeGenetique(int maxIter, int taillePopulation) {
+unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
     int i = 0, noAmelioration = 0, taillePopulationHalf, indiv1, indiv2;
     unsigned makespan = -1, makespanOld = -1;
 
@@ -262,6 +262,10 @@ void Data::algorithmeGenetique(int maxIter, int taillePopulation) {
         }
         i++;
     }
+
+    std::cout << "Makespan apres algo genetique : " << makespan << std::endl;
+
+    return makespan;
 
 }
 

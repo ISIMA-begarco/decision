@@ -114,7 +114,7 @@ std::ostream & operator<< (std::ostream & os, const Data & d)
     return os;
 }
 
-int Data::evaluer(Bierwith & b) {
+unsigned Data::evaluer(Bierwith & b) {
     std::vector<Job*>       last_job_on_machine_(this->nbMachines_, NULL);
     std::vector<unsigned>   dispo_machine(this->nbMachines_, 0);
     std::vector<unsigned>   last_op_on_job_(this->nbItems_, -1);
@@ -167,7 +167,7 @@ int Data::evaluer(Bierwith & b) {
     return makespan_;
 }
 
-void Data::rechercheLocale(Bierwith& b, int maxIter) {
+unsigned Data::rechercheLocale(Bierwith& b, int maxIter) {
     unsigned int new_makespan, old_makespan=makespan_;
     int i = 0;
     bool stop = false;
@@ -180,6 +180,8 @@ void Data::rechercheLocale(Bierwith& b, int maxIter) {
     }
 
     std::cout << "Makespan ameliore " << makespan_ /**<< " avec b = " << b**/ << std::endl;
+
+    return makespan_;
 }
 
 int Data::amelioration(Bierwith & b) {
@@ -219,7 +221,7 @@ int Data::amelioration(Bierwith & b) {
 	return this->makespan_;
 }
 
-void Data::algorithmeGenetique(int maxIter, int taillePopulation) {
+unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
     int i = 0, noAmelioration = 0, taillePopulationHalf, indiv1, indiv2;
     unsigned makespan = -1, makespanOld = -1;
 
@@ -232,29 +234,39 @@ void Data::algorithmeGenetique(int maxIter, int taillePopulation) {
             // Tirage des individus
             indiv1 = this->rng_engine_() % (int)((double)taillePopulation*0.1); // Prend dans les 10%
             indiv2 = this->rng_engine_() % (taillePopulation - (int)((double)taillePopulation*0.9)) + (int)((double)taillePopulation*0.1); // tire le reste
-            
+
             // Obtention de l'enfant
-            Bierwith lambda = p.croisement(p.m_pop[indiv1], p.m_pop[indiv2]); // Nouveau vecteur
+            Bierwith lambda = p.croisement(p.m_pop[indiv1]->m_bVector, p.m_pop[indiv2]->m_bVector); // Nouveau vecteur
             makespan = this->rechercheLocale(lambda, maxIter);
-            
+
             // Ajout de l'enfant dans le vecteur
             p.m_pop.push_back(new Individu(lambda, makespan));
         }
         p.sort();
         p.select();
-/*
-        if( ) { // pas d'amelioration
+
+        std::cout << p << std::endl;
+
+        if(makespan == makespanOld) { // On compte les cas stationnaires
             noAmelioration++;
-        } else {
+        } else { // Sinon on a ameliore
             noAmelioration = 0;
+            makespanOld = makespan;
         }
 
         if(noAmelioration == 10) {
-            // regenere aleatoirement de 6 a 50
-        }*/
+            noAmelioration = 0;
+
+            // On regenere les 90% fin de la population
+            p.regen(0.9, *this);
+        }
         i++;
     }
-
+    
+    std::cout << "Makespan apres algo genetique : " << makespan << std::endl;
+    
+    return makespan;
+    
 }
 
 Data& Data::operator=(const Data& d) {
