@@ -36,10 +36,10 @@
 1448550910 source:o:\onedrive\github\decision\tp2\job.cpp
 	"job.h"
 
-1448548838 source:c:\users\benji\github\decision\tp2\bierwith.cpp
+1448553810 source:c:\users\benji\github\decision\tp2\bierwith.cpp
 	"Bierwith.h"
 
-1448548838 c:\users\benji\github\decision\tp2\bierwith.h
+1448550572 c:\users\benji\github\decision\tp2\bierwith.h
 	<iostream>
 	<vector>
 	<algorithm>
@@ -49,38 +49,39 @@
 	<iostream>
 	<limits>
 
-1446546318 source:c:\users\benji\github\decision\tp2\job.cpp
+1448552147 source:c:\users\benji\github\decision\tp2\job.cpp
 	"job.h"
 
-1448522018 source:c:\users\benji\github\decision\tp2\main.cpp
+1448555021 source:c:\users\benji\github\decision\tp2\main.cpp
 	<iostream>
 	<fstream>
 	"data.h"
 	"job.h"
 	"Bierwith.h"
 
-1448550340 c:\users\benji\github\decision\tp2\data.h
+1448555262 c:\users\benji\github\decision\tp2\data.h
 	"job.h"
 	"Bierwith.h"
 	"population.h"
 	<vector>
 	<random>
 
-1448547098 source:c:\users\benji\github\decision\tp2\data.cpp
+1448553624 source:c:\users\benji\github\decision\tp2\data.cpp
 	"data.h"
 	<fstream>
 	<string>
 	<sstream>
 	<cstdlib>
 
-1448549762 c:\users\benji\github\decision\tp2\population.h
+1448556000 c:\users\benji\github\decision\tp2\population.h
 	<iostream>
 	<vector>
 	<algorithm>
+	<ostream>
 	"data.h"
 	"Bierwith.h"
 
-1448549759 source:c:\users\benji\github\decision\tp2\population.cpp
+1448555139 source:c:\users\benji\github\decision\tp2\population.cpp
 	"population.h"
 
 1448550910 o:\onedrive\github\decision\tp2\population.h

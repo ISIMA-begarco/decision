@@ -41,11 +41,11 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
         bVector.shuffle(); // Melange pour refaire une solution
     }
 
-    this->trier();
+    this->sort();
 }
 
 // Trie selon le makespan et affihe
-void Population::trier() {
+void Population::sort() {
     std::sort(m_pop.begin(), m_pop.end(), compareIndividu());
 
     std::cout << "Vecteur de population (makespan)" << std::endl;
@@ -55,6 +55,12 @@ void Population::trier() {
     std::cout << std::endl;
 }
 
+void Population::select() {
+    // On garde le nombre de personnes de base
+    while(m_pop.size() > m_taille) {
+        m_pop.pop_back();
+    }
+}
 
 // Teste si cette solutin est deja dans le vecteur ou non
 bool Population::solutionDouble(const Bierwith& b) const{
@@ -108,4 +114,35 @@ Population::~Population() {
         if(m_pop[i])
             delete(m_pop[i]);
     }
+}
+
+// Regenere un certain pourcentage de la fin de la population
+void Population::regen(double rate, const Data & d) {
+    int debut = (int)((double)m_taille*rate);
+    unsigned makespan = 0;
+    Data copieData = d;
+    Bierwith bVector(m_machine, m_item); /// TODO peut etre pas le bon ordre?
+    bVector.shuffle(); // Sinon on retombre directement dans le tout premier cas ajoute
+
+    int i = debut;
+
+    while(i < m_taille) {
+            //Data copieData = d;
+            makespan = copieData.evaluer(bVector); // Reevalue
+
+            if(!solutionDouble(bVector)) { // On a pas deja cette solution dans le vecteur
+                this->m_pop.push_back(new Individu(bVector, makespan));
+                i++;
+            }
+
+            bVector.shuffle(); // Melange pour refaire une solution
+    }
+}
+
+std::ostream & operator<< (std::ostream & os, const Population & p) {
+    os << "Affichage de la population : taille = " << p.m_pop.size() << "\n";
+    for(unsigned int i = 0; i < p.m_pop.size(); i++) {
+        os << p.m_pop[i]->m_makespan << " - ";
+    }
+    os << "\n";
 }

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <ostream>
 
 #include "data.h"
 #include "Bierwith.h"
@@ -13,13 +14,20 @@ class Data;
 class Individu {
 
         public:
-                Bierwith * m_bVector;
+                Bierwith m_bVector;
                 unsigned m_makespan;
 
-                Individu();
+                //Individu();
                 Individu(Bierwith, unsigned);
                 ~Individu();
 
+};
+
+// Pour faire le tri dans le vecteur
+class compareIndividu {
+public:
+        bool operator()(const Individu&, const Individu&) const;
+        bool operator()(const Individu*, const Individu*) const;
 };
 
 class Population {
@@ -29,17 +37,22 @@ class Population {
         int m_item;             // Nombre d'items dans nos datas
         int m_machine;          // Nombre de machines des data qu'on manipule
         std::vector<Individu *> m_pop;      // Contient toutes les solutions
-        std::vector<Individu *> m_pop_enf;      // Contient toutes les solutions
 
-        Population();
-        Population(int, Data&);
+        //Population();
+        Population(int, const Data&);
         virtual ~Population();
 
-        bool solutionDouble(const Data&) const;
-        void croisement();
+        void sort();
+        void select();
+        void regen(double);
+
+        bool solutionDouble(const Bierwith&) const;
+        Bierwith croisement(Bierwith & bon, Bierwith & mauvais);
         void mutation();
         void garderMeilleurs(Population&);
 
 };
+
+std::ostream & operator<< (std::ostream &, const Population &);
 
 #endif // POPULATION_H

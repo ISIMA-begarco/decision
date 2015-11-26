@@ -29,10 +29,10 @@ class Data {
 
 		void display_all (std::ostream &) const;
 
-		int evaluer(Bierwith &); // retourne le makespan
-		void rechercheLocale(Bierwith&, int);
+		unsigned evaluer(Bierwith &); // retourne le makespan
+		unsigned rechercheLocale(Bierwith&, int);
 		int amelioration(Bierwith&);
-		void algorithmeGenetique(int = 100); // L'entier est la taille de la population
+		void algorithmeGenetique(int = 100, int = 100); // L'entier est la taille de la population
 		Data& operator=(const Data&);
 };
 

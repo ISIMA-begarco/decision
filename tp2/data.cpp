@@ -114,7 +114,7 @@ std::ostream & operator<< (std::ostream & os, const Data & d)
     return os;
 }
 
-int Data::evaluer(Bierwith & b) {
+unsigned Data::evaluer(Bierwith & b) {
     std::vector<Job*>       last_job_on_machine_(this->nbMachines_, NULL);
     std::vector<unsigned>   dispo_machine(this->nbMachines_, 0);
     std::vector<unsigned>   last_op_on_job_(this->nbItems_, -1);
@@ -167,7 +167,7 @@ int Data::evaluer(Bierwith & b) {
     return makespan_;
 }
 
-void Data::rechercheLocale(Bierwith& b, int maxIter) {
+unsigned Data::rechercheLocale(Bierwith& b, int maxIter) {
     unsigned int new_makespan, old_makespan=makespan_;
     int i = 0;
     bool stop = false;
@@ -180,6 +180,8 @@ void Data::rechercheLocale(Bierwith& b, int maxIter) {
     }
 
     std::cout << "Makespan ameliore " << makespan_ /**<< " avec b = " << b**/ << std::endl;
+
+    return makespan_;
 }
 
 int Data::amelioration(Bierwith & b) {
@@ -219,30 +221,46 @@ int Data::amelioration(Bierwith & b) {
 	return this->makespan_;
 }
 
-void Data::algorithmeGenetique(int iterMax) {
-    /// Algo genetique suivant les notes du prof
-    int i = 0, noAmelioration = 0;
-    Population p(100, *this);
+void Data::algorithmeGenetique(int maxIter, int taillePopulation) {
+    int i = 0, noAmelioration = 0, taillePopulationHalf, indiv1, indiv2;
+    unsigned makespan = -1, makespanOld = -1;
 
+    Population p(taillePopulation, *this); // Initialise la population
+    taillePopulationHalf = int(p.m_taille/2);
 
-    while(i < iterMax) {
-        for(unsigned int j = 0; j < 50; i++) {
-            // Choisir p1 dans 1-5
-            // Choisir p2 dans 6 50
-            // lambda = croisement (p1, p2)
-            // recherche locale (lambda) -> lambda
-            // remplacer un element par lambda 80% p2 et 20% p1
+    while(i < maxIter) {
+        /* On double la taille de notre population */
+        for(unsigned int j = 0; j < taillePopulationHalf; i++) {
+            // Tirage des individus
+            indiv1 = this->rng_engine_() % (int)((double)taillePopulation*0.1); // Prend dans les 10%
+            indiv2 = this->rng_engine_() % (taillePopulation - (int)((double)taillePopulation*0.9)) + (int)((double)taillePopulation*0.1); // tire le reste
+
+            // Obtention de l'enfant
+            Bierwith lambda = p.croisement(p.m_pop[indiv1]->m_bVector, p.m_pop[indiv2]->m_bVector); // Nouveau vecteur
+            makespan = this->rechercheLocale(lambda, maxIter);
+
+            // Ajout de l'enfant dans le vecteur
+            p.m_pop.push_back(new Individu(lambda, makespan));
         }
+        p.sort();
+        p.select();
 
-        if( /* pas d'amelioration */) {
+        std::cout << p << std::endl;
+
+        if(makespan == makespanOld) { // On compte les cas stationnaires
             noAmelioration++;
-        } else {
+        } else { // Sinon on a ameliore
             noAmelioration = 0;
+            makespanOld = makespan;
         }
 
         if(noAmelioration == 10) {
-            // regenere aleatoirement de 6 a 50
+            noAmelioration = 0;
+
+            // On regenere les 90% fin de la population
+            p.regen(0.9, *this);
         }
+        i++;
     }
 
 }

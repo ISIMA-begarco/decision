@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <ostream>
 
 #include "data.h"
 #include "Bierwith.h"
@@ -41,7 +42,9 @@ class Population {
         Population(int, const Data&);
         virtual ~Population();
 
-        void trier();
+        void sort();
+        void select();
+        void regen(double, const Data&);
 
         bool solutionDouble(const Bierwith&) const;
         Bierwith croisement(Bierwith & bon, Bierwith & mauvais);
@@ -49,5 +52,7 @@ class Population {
         void garderMeilleurs(Population&);
 
 };
+
+std::ostream & operator<< (std::ostream &, const Population &);
 
 #endif // POPULATION_H
