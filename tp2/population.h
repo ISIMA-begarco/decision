@@ -16,7 +16,7 @@ class Individu {
                 Bierwith m_bVector;
                 unsigned m_makespan;
 
-                Individu();
+                //Individu();
                 Individu(Bierwith, unsigned);
                 ~Individu();
 
@@ -35,13 +35,14 @@ class Population {
         int m_item;             // Nombre d'items dans nos datas
         int m_machine;          // Nombre de machines des data qu'on manipule
         std::vector<Individu *> m_pop;      // Contient toutes les solutions
-        std::vector<Individu *> m_pop_enf;      // Contient toutes les solutions
 
-        Population();
-        Population(int, Data&);
+        //Population();
+        Population(int, const Data&);
         virtual ~Population();
 
-        bool solutionDouble(const Data&) const;
+        void trier();
+
+        bool solutionDouble(const Bierwith&) const;
         void croisement();
         void mutation();
         void garderMeilleurs(Population&);

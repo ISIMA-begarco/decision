@@ -221,13 +221,10 @@ int Data::amelioration(Bierwith & b) {
 
 void Data::algorithmeGenetique(int n, int k) {
     /// Algo genetique suivant les notes du prof
-    Population p(n, *this), p_prime;
+    Population p(n, *this);
 
     for(unsigned int i = 0; i < k; i++) {
-        p_prime = p;
-        p_prime.croisement(); /// TODO
-        p_prime.mutation(); /// TODO
-        p.garderMeilleurs(p_prime); /// TODO
+
     }
 
 }

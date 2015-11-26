@@ -10,6 +10,14 @@ Bierwith::Bierwith(int nb_jobs, int nb_tasks): v_(nb_jobs*nb_tasks) {
 	//std::cout << std::endl ;
 }
 
+Bierwith::Bierwith(const Bierwith& b) {
+    this->v_.reserve(b.v_.size());
+    for(unsigned int i = 0; i < b.v_.size(); i++) {
+        this->v_[i] = b.v_[i];
+    }
+}
+
+
 Bierwith& Bierwith::operator=(const Bierwith& b) {
 	//v_(b.v_.size()); // TODO regler ca ...
     this->v_.resize(b.v_.size());
@@ -29,11 +37,4 @@ std::ostream & operator<< (std::ostream & os, const Bierwith & b)
         os << b.v_[i] << " ";
     }
     return os;
-}
-
-Bierwith::Bierwith(const Bierwith& b) {
-    this->v_.reserve(b.v_.size());
-    for(unsigned int i = 0; i < b.v_.size(); i++) {
-        this->v_[i] = b.v_[i];
-    }
 }
