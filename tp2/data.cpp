@@ -174,7 +174,7 @@ unsigned Data::rechercheLocale(Bierwith& b, int maxIter) {
     	i++;
     }
 
-    std::cout << "Makespan ameliore " << makespan_ /**<< " avec b = " << b**/ << std::endl;
+    //std::cout << "Makespan ameliore " << makespan_ /**<< " avec b = " << b**/ << std::endl;
 
     return makespan_;
 }
@@ -256,16 +256,14 @@ int Data::hash(int modulo) const {
 }
 
 unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
-    int step = 0, noAmelioration = 0, taillePopulationHalf, indiv1, indiv2;
+    int step = 0, noAmelioration = 0, indiv1, indiv2;
     unsigned makespan = -1, makespanOld = -1;
 
+    // Creation de lois uniformes pour tirer les individus
     std::uniform_int_distribution<> tenPercent(0, (int)(((double)taillePopulation)*0.1));
     std::uniform_int_distribution<> ntyPercent((int)(((double)taillePopulation)*0.1)+1, taillePopulation-1);
 
-std::cout << "Initialisation de la population ..." << std::endl;
-
     Population p(taillePopulation, *this); // Initialise la population
-    taillePopulationHalf = int(p.m_taille/2);
 
 std::cout << "Population initialisee" << std::endl;
 p.printAll();
@@ -273,25 +271,23 @@ system("pause");
 
     while(step < maxIter) {
         /* On double la taille de notre population */
-        for(unsigned int j = 0; j < taillePopulationHalf; j++) {
+        for(unsigned int j = 0; j < taillePopulation; j++) {
             // Tirage des individus
             indiv1 = tenPercent(this->rng_engine_); // Prend dans les 10%
-            indiv2 = ntyPercent(this->rng_engine_);
-
-std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
+            indiv2 = ntyPercent(this->rng_engine_); // Prend dans les 90% restants
 
             // Obtention de l'enfant
             Bierwith lambda = p.croisement(p.m_pop[indiv1]->m_bVector, p.m_pop[indiv2]->m_bVector); // Nouveau vecteur
             makespan = this->rechercheLocale(lambda, maxIter);
-std::cout << "Makespan trouve : " << makespan << std::endl;
+
+//std::cout << "Mix individu " << indiv1 << " et " << indiv2 << " trouve : " << makespan << std::endl;
+
             // Ajout de l'enfant dans le vecteur
             p.m_pop.push_back(new Individu(lambda, makespan));
         }
-        p.select(); // On sort avant de select donc c'est bon
+        p.select(); // On trie avant de select donc ok
 
-        p.printAll();
-
-        makespan = p.m_pop[0]->m_makespan;
+        makespan = p.m_pop[0]->m_makespan; // Le meilleur est toujours en premier
 
         if(makespan == makespanOld) { // On compte les cas stationnaires
             noAmelioration++;
@@ -307,8 +303,10 @@ std::cout << "Makespan trouve : " << makespan << std::endl;
             p.regen(0.9, *this); // On sort apres donc ok
         }
         step++;
+        std::cout << step << std::endl;
     }
 
+    //p.printAll();
     std::cout << "## Makespan apres algo genetique : " << makespan << " ##" << std::endl;
 
     return makespan;

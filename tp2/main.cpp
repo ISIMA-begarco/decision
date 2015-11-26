@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 
     //data->evaluer(b);
     //data->rechercheLocale(b, 1000);
-    std::cout << data->algorithmeGenetique(10, 10);
+    std::cout << data->algorithmeGenetique(1000, 100);
 
     delete data;
 

@@ -113,16 +113,24 @@ Bierwith Population::croisement(Bierwith & bon, Bierwith & mauvais) {
 
 // Regenere un certain pourcentage de la fin de la population
 void Population::regen(double rate, const Data & d) {
-    int debut = (int)((double)m_taille*rate);
+    // Debut des "mauvais"
+    int debut = (int)(((double)m_taille)*(1.0-rate)) + 1;
     unsigned makespan = 0;
     Data copieData = d;
-    Bierwith bVector(m_machine, m_item); /// TODO peut etre pas le bon ordre?
+
+    // Init du vecteur de b
+    Bierwith bVector(m_item, m_machine); /// TODO dans le bon ordre
     bVector.shuffle(); // Sinon on retombre directement dans le tout premier cas ajoute
 
-    int i = debut;
+    // On commence par les enlever de la population
+    for(unsigned int a = m_pop.size(); a > debut; a--) {
+        delete (m_pop[a]);
+        m_pop.pop_back();
+    }
 
+    int i = debut;
+    // Puis on on recreer d'autres
     while(i < m_taille) {
-            //Data copieData = d;
             makespan = copieData.evaluer(bVector); // Reevalue
 
             if(!solutionDouble(copieData)) { // On a pas deja cette solution dans le vecteur
