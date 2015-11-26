@@ -9,8 +9,9 @@
 class Bierwith {
 	public:
 		std::vector<unsigned int> v_; // Le vecteur de B
+        unsigned    machine_,
+                    item_;
 
-    public:
 		Bierwith(int, int);
 		Bierwith(const Bierwith&); // constructeur par copie
 		void shuffle() {
