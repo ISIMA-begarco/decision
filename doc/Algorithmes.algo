@@ -1,0 +1,62 @@
+Pour chaque objet dans le vecteur Faire
+	Recherche sur quelle machine il doit s'executer
+	
+	Si date de disponibilité du job < date de disponibilité machine Alors
+		La date de début du job est celle de disponibilité de la machine
+		Mise à jour de la date de disponibilité machine en ajoutant la durée du job
+		Mise à jour de la date de disponibilité du job
+		Mise à jour du pointeur father
+	Sinon
+		La date de début du job est celle à laquelle il est disponible
+		Mise à jour de la date de disponibilité machine qui correspond à la date de fin de ce job
+		Mise à jour de la date de disponibilité du job
+		Mise à jour du pointeur father
+	Fin Si
+	
+	Mise à jour du pointeurs vers le précédent
+	Mise à jour du dernier job de la machine
+	Mise à jour de la prochaine machine pour ce job
+	
+Fin Pour
+
+Rechercher et retourner le makespan
+
+-------------------------------------------------
+
+Tant que le makespan est amélioré ET que l'on ne dépasse pas le nombre d'itérations Faire
+	Tant que parcours du chemin critique
+		Rechercher un arc disjonctif
+		Le permuter avec un arc du chemin critique
+		Evaluer le nouveau vecteur obtenu
+		
+		Si makespan est amélioré Alors
+			Garder ce vecteur et cette solution
+			Ne pas continuer sur le chemin critique
+		Sinon
+			Continuer sur le chemin critique
+		Fin Si
+	Fin Tant que
+Fin Tant que
+
+Retourner le makespan
+
+---------------------------------------------
+
+Tant que l'on ne dépasse pas le nombre d'itérations Faire
+	Pour i de 1 à taille de la population Faire
+		Choisir P1 dans les 10% de la population
+		Choisir P2 dans les 90% restants
+		Effectuer le croisement de P1 et P2 -> C
+		Effectuer la recherche locale sur C
+		Ajouter C à la population
+	Fin Pour
+	
+	Retrier la population
+	Retirer les individus en trop pour revenir au nombre initial
+
+	Si on a pas amélioré la solution 10 fois consécutives Alors
+		On regénère aléatoirement les 90% de la population qui est "mauvaise"
+	Fin Si
+Fin Tant que
+
+Retourner le makespan
