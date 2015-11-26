@@ -34,7 +34,7 @@ class Data {
 		int amelioration(Bierwith&);
 		unsigned algorithmeGenetique(int = 100, int = 100); // L'entier est la taille de la population
 		Data& operator=(const Data&);
-		int hash(int = 1000000) const;
+		unsigned long long hash(int = 1000000) const;
 };
 
 std::ostream & operator<< (std::ostream &, const Data &);

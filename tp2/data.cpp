@@ -243,8 +243,8 @@ Data& Data::operator=(const Data& d) {
     return *this;
 }
 
-int Data::hash(int modulo) const {
-    int code = 0;
+unsigned long long Data::hash(int modulo) const {
+    unsigned long long code = 0;
 
     for(unsigned int i = 0; i < nbItems_; i++) {
         for(unsigned int j = 0; j < nbMachines_; j++) {
