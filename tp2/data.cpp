@@ -258,7 +258,7 @@ unsigned long long Data::hash(int modulo) const {
 unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
     int step = 0, noAmelioration = 0, indiv1, indiv2;
     unsigned makespan = -1, makespanOld = -1;
-
+std::cout << "Initialisation de la population..." << std::endl;
     // Creation de lois uniformes pour tirer les individus
     std::uniform_int_distribution<> tenPercent(0, (int)(((double)taillePopulation)*0.1));
     std::uniform_int_distribution<> ntyPercent((int)(((double)taillePopulation)*0.1)+1, taillePopulation-1);
@@ -266,8 +266,6 @@ unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
     Population p(taillePopulation, *this); // Initialise la population
 
 std::cout << "Population initialisee" << std::endl;
-p.printAll();
-system("pause");
 
     while(step < maxIter) {
         /* On double la taille de notre population */
@@ -303,11 +301,13 @@ system("pause");
             p.regen(0.9, *this); // On sort apres donc ok
         }
         step++;
-        std::cout << step << std::endl;
+
+        if(step % 100 == 0)
+            std::cout << "#" << step << " : " << makespan << std::endl;
     }
 
     //p.printAll();
-    std::cout << "## Makespan apres algo genetique : " << makespan << " ##" << std::endl;
+    std::cout << "## Makespan final : " << makespan << " ##" << std::endl;
 
     return makespan;
 

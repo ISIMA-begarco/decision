@@ -1,52 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="job.h" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Bierwith.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="310" topLine="0" />
+			<Cursor1 position="469" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="job.cpp" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="population.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="population.h" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="605" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="data.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="7172" topLine="240" />
-		</Cursor>
-	</File>
-	<File name="population.cpp" open="1" top="1" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3059" topLine="72" />
+			<Cursor1 position="2397" topLine="24" />
 		</Cursor>
 		<Folding>
-			<Collapse line="33" />
+			<Collapse line="10" />
+			<Collapse line="14" />
+			<Collapse line="23" />
+			<Collapse line="58" />
+			<Collapse line="62" />
+			<Collapse line="87" />
 		</Folding>
 	</File>
-	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="population.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="236" topLine="0" />
+			<Cursor1 position="1425" topLine="29" />
 		</Cursor>
 	</File>
-	<File name="data.h" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="Bierwith.cpp" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="559" topLine="0" />
+			<Cursor1 position="306" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Bierwith.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="data.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="532" topLine="0" />
+			<Cursor1 position="6934" topLine="14" />
+		</Cursor>
+		<Folding>
+			<Collapse line="8" />
+			<Collapse line="17" />
+			<Collapse line="56" />
+			<Collapse line="76" />
+			<Collapse line="98" />
+			<Collapse line="111" />
+			<Collapse line="164" />
+			<Collapse line="181" />
+			<Collapse line="218" />
+			<Collapse line="257" />
+		</Folding>
+	</File>
+	<File name="data.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="844" topLine="14" />
 		</Cursor>
 	</File>
-	<File name="Bierwith.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.cpp" open="1" top="1" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="180" topLine="0" />
+			<Cursor1 position="509" topLine="2" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
