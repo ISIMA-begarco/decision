@@ -38,11 +38,11 @@ Population::Population(int taille, const Data& d) : m_taille(taille) {
 
     m_pop.reserve(m_taille); // Reserve la taille de la population
 
-    Bierwith bVector(m_item, m_machine); /// TODO peut etre pas le bon ordre?
+    Bierwith bVector(m_item, m_machine); /// TODO est dans l'ordre
 
     while(i < m_taille) {
         makespan = copieData.evaluer(bVector); // Reevalue
-
+std::cout << makespan << " ";
         if(!solutionDouble(copieData)) { // On a pas deja cette solution dans le tableau de presence
             this->m_pop.push_back(new Individu(bVector, makespan));
             i++;

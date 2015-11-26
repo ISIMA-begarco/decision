@@ -222,30 +222,43 @@ unsigned Data::algorithmeGenetique(int maxIter, int taillePopulation) {
     int i = 0, noAmelioration = 0, taillePopulationHalf, indiv1, indiv2;
     unsigned makespan = -1, makespanOld = -1;
 
+    std::uniform_int_distribution<> tenPercent(0, (int)(((double)taillePopulation)*0.1));
+    std::uniform_int_distribution<> ntyPercent((int)(((double)taillePopulation)*0.1)+1, taillePopulation-1);
+
 std::cout << "Initialisation de la population ..." << std::endl;
 
     Population p(taillePopulation, *this); // Initialise la population
     taillePopulationHalf = int(p.m_taille/2);
 
 std::cout << "Population initialisee" << std::endl;
+for(int a = 0; a < p.m_pop.size(); a++) {
+    std::cout << p.m_pop[a]->m_makespan << " - ";
+} std::cout << std::endl;
+system("pause");
 
     while(i < maxIter) {
         /* On double la taille de notre population */
         for(unsigned int j = 0; j < taillePopulationHalf; j++) {
             // Tirage des individus
-            indiv1 = this->rng_engine_() % (int)(((double)taillePopulation)*0.1); // Prend dans les 10%
-            indiv2 = this->rng_engine_() % (taillePopulation - (int)(((double)taillePopulation)*0.9)) + (int)((double)taillePopulation*0.1); // tire le reste
+            indiv1 = tenPercent(this->rng_engine_); // Prend dans les 10%
+            indiv2 = ntyPercent(this->rng_engine_);
 
 std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
 
             // Obtention de l'enfant
             Bierwith lambda = p.croisement(p.m_pop[indiv1]->m_bVector, p.m_pop[indiv2]->m_bVector); // Nouveau vecteur
             makespan = this->rechercheLocale(lambda, maxIter);
-
+std::cout << "Makespan trouve : " << makespan << std::endl;
             // Ajout de l'enfant dans le vecteur
             p.m_pop.push_back(new Individu(lambda, makespan));
         }
         p.select(); // On sort avant de select donc c'est bon
+
+        for(int a = 0; a < p.m_pop.size(); a++) {
+            std::cout << p.m_pop[i]->m_makespan << " - ";
+        } std::cout << std::endl;
+
+        makespan = p.m_pop[0]->m_makespan;
 
         if(makespan == makespanOld) { // On compte les cas stationnaires
             noAmelioration++;
@@ -263,7 +276,7 @@ std::cout << "Mix individu " << indiv1 << " et " << indiv2 << std::endl;
         i++;
     }
 
-    std::cout << "Makespan apres algo genetique : " << makespan << std::endl;
+    std::cout << "## Makespan apres algo genetique : " << makespan << " ##" << std::endl;
 
     return makespan;
 
