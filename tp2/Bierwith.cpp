@@ -3,15 +3,17 @@
 
 Bierwith::Bierwith(int nb_jobs, int nb_tasks): v_(nb_jobs*nb_tasks) {
 // Constructeur qui prend le nombre de machines et de taches
+    this->item_ = nb_jobs;
+    this->machine_ = nb_tasks;
 	for(int i = 0 ; i < nb_tasks*nb_jobs ; ++i) {
 		v_[i] = (int) (i / nb_tasks);
-		//std::cout << v_[i] << "\t" ;
 	}
-	//std::cout << std::endl ;
 }
 
 Bierwith::Bierwith(const Bierwith& b) {
     this->v_.reserve(b.v_.size());
+    this->item_ = b.item_;
+    this->machine_ = b.machine_;
     for(unsigned int i = 0; i < b.v_.size(); i++) {
         this->v_[i] = b.v_[i];
     }

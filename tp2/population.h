@@ -43,7 +43,7 @@ class Population {
         void trier();
 
         bool solutionDouble(const Bierwith&) const;
-        void croisement();
+        Bierwith croisement(Bierwith & bon, Bierwith & mauvais);
         void mutation();
         void garderMeilleurs(Population&);
 

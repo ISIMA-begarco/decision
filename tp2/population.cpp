@@ -63,18 +63,30 @@ bool Population::solutionDouble(const Bierwith& b) const{
 }
 
 // Cree un enfant en croisant 2 individus
-void Population::croisement() {
-    int indiv1, indiv2;
-    // Cherche le premier individu dans les 10% meilleurs
-    indiv1 = m_mt() % (unsigned)((double)m_taille*0.1);
-    // Cherche l'autre dans le reste
-    indiv2 = m_mt() % (m_taille - (unsigned)((double)m_taille*0.1)) + (unsigned)((double)m_taille*0.1);
-
-
-}
-
-void Population::mutation() {
-    /// TODO
+Bierwith Population::croisement(Bierwith & bon, Bierwith & mauvais) {
+    Bierwith fils(bon.item_, bon.machine_);
+    std::vector<unsigned> compteur(bon.item_,0);
+    unsigned i = 0;
+    for(/* i */; i < bon.v_.size()/2 ; ++i) {   /// on met la moitié du bon
+        fils.v_[i] = bon.v_[i];
+        compteur[bon.v_[i]]++;
+    }
+    unsigned j = i;
+    for(/* i */; i < bon.v_.size() ; ++i) {   /// on complete avec le mauvais
+        if(compteur[mauvais.v_[i]]<fils.machine_) {
+            fils.v_[j++] = mauvais.v_[i];
+            compteur[mauvais.v_[i]]++;
+        }
+    }
+    unsigned k = 0;
+    while(k < compteur.size() && j < fils.v_.size()) {   /// on complete les jobs manquants
+        while(compteur[k] < fils.machine_) {
+            fils.v_[j++] = k;
+            compteur[k]++;
+        }
+        k++;
+    }
+    return fils;
 }
 
 void Population::garderMeilleurs(Population& p_prime) {

@@ -1,39 +1,39 @@
 # depslib dependency file v1.0
-1448500117 source:o:\onedrive\github\decision\tp2\main.cpp
+1448550296 source:o:\onedrive\github\decision\tp2\main.cpp
 	<iostream>
 	<fstream>
 	"data.h"
 	"job.h"
 	"Bierwith.h"
 
-1448491986 o:\onedrive\github\decision\tp2\data.h
+1448548247 o:\onedrive\github\decision\tp2\data.h
 	"job.h"
 	"Bierwith.h"
 	"population.h"
 	<vector>
 	<random>
 
-1446978375 o:\onedrive\github\decision\tp2\job.h
+1448548247 o:\onedrive\github\decision\tp2\job.h
 	<iostream>
 	<limits>
 
-1448496009 o:\onedrive\github\decision\tp2\bierwith.h
+1448548977 o:\onedrive\github\decision\tp2\bierwith.h
 	<iostream>
 	<vector>
 	<algorithm>
 	"job.h"
 
-1448497330 source:o:\onedrive\github\decision\tp2\bierwith.cpp
+1448550352 source:o:\onedrive\github\decision\tp2\bierwith.cpp
 	"Bierwith.h"
 
-1448500210 source:o:\onedrive\github\decision\tp2\data.cpp
+1448548247 source:o:\onedrive\github\decision\tp2\data.cpp
 	"data.h"
 	<fstream>
 	<string>
 	<sstream>
 	<cstdlib>
 
-1446978375 source:o:\onedrive\github\decision\tp2\job.cpp
+1448548247 source:o:\onedrive\github\decision\tp2\job.cpp
 	"job.h"
 
 1448546817 source:c:\users\benji\github\decision\tp2\bierwith.cpp
@@ -83,12 +83,13 @@
 1448525640 source:c:\users\benji\github\decision\tp2\population.cpp
 	"population.h"
 
-1448489430 o:\onedrive\github\decision\tp2\population.h
+1448549143 o:\onedrive\github\decision\tp2\population.h
 	<iostream>
 	<vector>
+	<algorithm>
 	"data.h"
 	"Bierwith.h"
 
-1448488035 source:o:\onedrive\github\decision\tp2\population.cpp
+1448550063 source:o:\onedrive\github\decision\tp2\population.cpp
 	"population.h"
 
