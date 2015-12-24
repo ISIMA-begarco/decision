@@ -20,31 +20,39 @@ void dummy0 (WorkingSolution & sol) {
 }
 
 void dummy (WorkingSolution & sol) {
-    RouteInfo & ri = sol.open_route();
-    vector<NodeInfo> clients;
+    vector<NodeInfo> clientsVector;
     sol.clear();
 
     // recupere les clients dans le vecteur
-    for (auto & node: sol.nodes()) {
+    for (auto & node : sol.nodes()) {
         if (node.customer->id() != sol.data().depot())
-            clients.push_back(node);
+            clientsVector.push_back(node);
     }
     // Trie les clients par leur moyenne de fenetre de temps
-    std::sort(clients.begin(), clients.end(), CompareMiddleTW);
+    std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
 
-    while(clients.size()) { // boucle principale
-        for(auto & node : clients) {
-            if(sol.data().is_valid(ri. ))
+    list<NodeInfo> clients(clientsVector.begin(), clientsVector.end());
+    for(auto line : clients)
+        cout << "#" << line.customer->id() << endl;
+
+    while(!(clients.empty())) { // boucle principale
+        RouteInfo & ri = sol.open_specific_route(clients.front());      // on cree une nouvelle route avec le premier client
+        clients.pop_front();
+        auto toInsert = clients.begin();
+        while((toInsert=rechClientAInserer(clients, toInsert, ri, sol)) != clients.end()) { // on recherche si des clients peuvent etre inseres
+            sol.insert(*(ri.depot.prev), *toInsert);     // on insere
+            toInsert = clients.erase(toInsert);         // on enleve des clients non desservis
+            cout << "insertion" << endl;
         }
     }
 }
-
+/*
 NodeInfo & rechPrec(RouteInfo & tournee, NodeInfo & clients) {
     NodeInfo & prec = tournee.depot;
     NodeInfo * cour =
     while()
 }
-
+*/
 /** \brief Recherche quel client inserer a la fin d'une tournee
  *
  * \param Vecteur contenant les clients tries par moyenne de fenetre de temps
@@ -53,18 +61,39 @@ NodeInfo & rechPrec(RouteInfo & tournee, NodeInfo & clients) {
  * \param La solution courante
  * \return L'indice du client a inserer en fin de tournee, -1 si on en a pas
  *
- */
-int rechClientAInserer(const vector<NodeInfo> clients, unsigned int from, const RouteInfo ri, WorkingSolution & sol) {
+ *//**
+int rechClientAInserer(const forward_list<NodeInfo> clients, unsigned int from, const RouteInfo ri, WorkingSolution & sol) {
     unsigned int i = from;
 
     // Date de fermeture de ce client > que date
     while( i < clients.size()
-          && ( (client[i].customer->close_ < (ri.depot.prev->arrival + ri.depot.prev->customer->service_) )
-          || (clients[i].customer->demand_ + ri.depot.load <  sol.data().fleetCapacity()) ){
+          && (     !(sol.data().is_valid(ri.depot.prev->customer->id(),clients[i].customer->id()))
+                || (clients[i].customer->close() < (ri.depot.prev->arrival + ri.depot.prev->customer->service()) )
+                || (clients[i].customer->demand() + ri.depot.load <  sol.data().fleetCapacity())
+             )
+         ){
         i++;
     }
 
-    return ((i > clients.size())? -1; i);
+    return ((i > clients.size())? -1 : i);
+}**/
+
+list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list<NodeInfo>::iterator from, const RouteInfo ri, WorkingSolution & sol) {
+    list<NodeInfo>::iterator i = from;
+
+    // Date de fermeture de ce client > que date
+    cout << ri.depot.prev->customer->id() << " " << i->customer->id() << endl;
+    while( (i != clients.end())
+          && (     !(sol.data().is_valid(ri.depot.prev->customer->id(),i->customer->id()))
+                || (i->customer->close() < (ri.depot.prev->arrival + ri.depot.prev->customer->service()) )
+                || (i->customer->demand() + ri.depot.load <  sol.data().fleetCapacity())
+             )
+         ) {
+    cout << ri.depot.prev->customer->id() << " " << i->customer->id() << endl;
+        i++;
+    }
+    cout << "valeur iterator: " << i->customer->id() << endl;
+    return i;
 }
 
 /**

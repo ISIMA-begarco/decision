@@ -90,7 +90,7 @@ class Data
     Id       depot_;
     Time     total_services_;
     std::vector< std::vector<Time> > distance_;
-    std::vector< std::vector<bool> > is_valid_;
+    std::vector< std::vector<bool> > is_valid_; /*  */
     Avector  arcs_;
 
     void build_arcs ();

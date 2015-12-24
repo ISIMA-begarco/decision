@@ -1,6 +1,7 @@
 #ifndef COMPAREMIDDLETW_H
 #define COMPAREMIDDLETW_H
 
+#include "workingsolution.h"
 
 class CompareMiddleTW
 {

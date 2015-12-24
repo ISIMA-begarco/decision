@@ -46,3 +46,65 @@
 	<sstream>
 	<cstdlib>
 
+1449832058 source:o:\onedrive\github\decision\tp3\algorithms.cpp
+	"algorithms.h"
+	"workingsolution.h"
+	"CompareMiddleTW.h"
+	<algorithm>
+	<cassert>
+
+1449831943 o:\onedrive\github\decision\tp3\algorithms.h
+	<vector>
+	<list>
+	"workingsolution.h"
+
+1448559097 o:\onedrive\github\decision\tp3\workingsolution.h
+	"data.h"
+
+1449826338 o:\onedrive\github\decision\tp3\data.h
+	<string>
+	<iostream>
+	<vector>
+	<list>
+
+1449825526 o:\onedrive\github\decision\tp3\comparemiddletw.h
+	"workingsolution.h"
+
+1448559096 source:o:\onedrive\github\decision\tp3\bkr.cpp
+	"bkr.h"
+	<fstream>
+	<algorithm>
+
+1448559096 o:\onedrive\github\decision\tp3\bkr.h
+	"data.h"
+
+1448559096 source:o:\onedrive\github\decision\tp3\data.cpp
+	"data.h"
+	<fstream>
+	<sstream>
+	<limits>
+	<cmath>
+	<algorithm>
+	<cassert>
+
+1448559097 source:o:\onedrive\github\decision\tp3\main.cpp
+	"bkr.h"
+	"algorithms.h"
+	<iostream>
+	<iomanip>
+	<chrono>
+	<random>
+
+1448559097 source:o:\onedrive\github\decision\tp3\workingsolution.cpp
+	"workingsolution.h"
+	<limits>
+	<algorithm>
+	<cassert>
+	<list>
+	<fstream>
+	<sstream>
+	<cstdlib>
+
+1449832298 source:o:\onedrive\github\decision\tp3\comparemiddletw.cpp
+	"CompareMiddleTW.h"
+
