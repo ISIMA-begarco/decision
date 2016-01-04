@@ -81,12 +81,13 @@ int rechClientAInserer(const forward_list<NodeInfo> clients, unsigned int from, 
 list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list<NodeInfo>::iterator from, const RouteInfo ri, WorkingSolution & sol) {
     list<NodeInfo>::iterator i = from;
 
+///TODO is_feasible ne traite pas l'existence des chemins
     // Date de fermeture de ce client > que date
     cout << ri.depot.prev->customer->id() << " " << i->customer->id() << endl;
-    while( (i != clients.end())
-          && (     !(sol.data().is_valid(ri.depot.prev->customer->id(),i->customer->id()))
-                || (i->customer->close() < (ri.depot.prev->arrival + ri.depot.prev->customer->service()) )
-                || (i->customer->demand() + ri.depot.load <  sol.data().fleetCapacity())
+    while( (i != clients.end()) ///&& !sol.is_feasible (*(ri.depot.prev), i->customer->demand(), i->customer->service())
+          && (     //!(sol.data().is_valid(ri.depot.prev->customer->id(),i->customer->id()))
+               /* ||*/ (i->customer->close() < (ri.depot.prev->arrival + ri.depot.prev->customer->service()) + sol.data().distance(ri.depot.prev->customer->id(),i->customer->id()) )
+                /*|| (i->customer->demand() + ri.depot.load <  sol.data().fleetCapacity()*///)
              )
          ) {
     cout << ri.depot.prev->customer->id() << " " << i->customer->id() << endl;
