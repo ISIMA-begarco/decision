@@ -32,8 +32,8 @@ void dummy (WorkingSolution & sol) {
     std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
 
     list<NodeInfo> clients(clientsVector.begin(), clientsVector.end());
-    for(auto line : clients)
-        cout << "#" << line.customer->id() << endl;
+    //for(auto line : clients)
+    //    cout << "#" << line.customer->id() << endl;
 
     while(!(clients.empty())) { // boucle principale
         RouteInfo & ri = sol.open_specific_route(clients.front());      // on cree une nouvelle route avec le premier client
@@ -42,7 +42,6 @@ void dummy (WorkingSolution & sol) {
         while((toInsert=rechClientAInserer(clients, toInsert, ri, sol)) != clients.end()) { // on recherche si des clients peuvent etre inseres
             sol.insert(*(ri.depot.prev), *toInsert);     // on insere
             toInsert = clients.erase(toInsert);         // on enleve des clients non desservis
-            cout << "insertion" << endl;
         }
     }
 }
@@ -83,17 +82,16 @@ list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list
 
 ///TODO is_feasible ne traite pas l'existence des chemins
     // Date de fermeture de ce client > que date
-    cout << ri.depot.prev->customer->id() << " " << i->customer->id() << endl;
-    while( (i != clients.end()) ///&& !sol.is_feasible (*(ri.depot.prev), i->customer->demand(), i->customer->service())
-          && (     //!(sol.data().is_valid(ri.depot.prev->customer->id(),i->customer->id()))
-               /* ||*/ (i->customer->close() < (ri.depot.prev->arrival + ri.depot.prev->customer->service()) + sol.data().distance(ri.depot.prev->customer->id(),i->customer->id()) )
-                /*|| (i->customer->demand() + ri.depot.load <  sol.data().fleetCapacity()*///)
+
+    while( (i != clients.end())
+          && (     !(sol.data().is_valid(ri.depot.prev->customer->id(),i->customer->id()))
+                || (i->customer->close() < (ri.depot.prev->arrival + ri.depot.prev->customer->service()) + sol.data().distance(ri.depot.prev->customer->id(),i->customer->id()) )
+                || (i->customer->demand() + ri.depot.load > sol.data().fleetCapacity())
              )
          ) {
-    cout << ri.depot.prev->customer->id() << " " << i->customer->id() << endl;
         i++;
     }
-    cout << "valeur iterator: " << i->customer->id() << endl;
+
     return i;
 }
 
