@@ -30,6 +30,7 @@ void insertion (WorkingSolution & sol) {
     }
     // Trie les clients par leur moyenne de fenetre de temps
     std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
+    //std::random_shuffle(clientsVector.begin(), clientsVector.end());
 
     list<NodeInfo> clients(clientsVector.begin(), clientsVector.end());
     //for(auto line : clients)
@@ -44,7 +45,8 @@ void insertion (WorkingSolution & sol) {
             toInsert = clients.erase(toInsert);         // on enleve des clients non desservis
         }
     }
-
+    RechLocComplete loc;
+    loc(sol);
 }
 /*
 NodeInfo & rechPrec(RouteInfo & tournee, NodeInfo & clients) {
@@ -109,51 +111,59 @@ list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list
 
 /// recherche locale type cross
 void Cross::operator() (WorkingSolution & s) {
-
+    int i =5;
+    i + 5;
 }
 
 /// recherche locale type 2 opt
 void Opt2::operator() (WorkingSolution & s) {
-
+    int i =5;
+    i + 5;
 }
 
 
 /// recherche locale type or opt
 void OrOpt::operator() (WorkingSolution & s) {
-
+    int i =5;
+    i + 5;
 }
 
 /// cas particulier de la recherche locale type 2 opt
 void Opt2Etoile::operator() (WorkingSolution & s) {
-
+    int i =5;
+    i + 5;
 }
 
 /// cas particulier de la recherche locale type or opt
 void OrOptEtoile::operator() (WorkingSolution & s) {
-
+    int i =5;
+    i + 5;
 }
 
 /// recherche locale complete
 RechLocComplete::RechLocComplete() {
-    rl.push_back(Opt2Etoile());
-    rl.push_back(OrOptEtoile());
-    rl.push_back(Opt2());
-    rl.push_back(OrOpt());
-    rl.push_back(Cross());
+    rl[0] = Opt2Etoile();
+    rl[1] = OrOptEtoile();
+    rl[2] = Opt2();
+    rl[3] = OrOpt();
+    rl[4] = Cross();
 }
 
 void RechLocComplete::operator() (WorkingSolution & s) {
     unsigned    k = 0,
-                oldDistance = s.total_distance(),
                 oldNbRoutes = s.nb_routes();
+    Time        oldDistance = s.total_distance();
+
     cout << "coucou on a : " << oldNbRoutes << " routes et " << oldDistance << " km\n";
     while(k < 5) {
-
         rl[k++](s);
         if(oldDistance > s.total_distance() || oldNbRoutes > s.nb_routes()) {
             k = 0;
+            oldNbRoutes = s.nb_routes();
+            oldDistance = s.total_distance();
         }
     }
+    cout << "coucou on a : " << oldNbRoutes << " routes et " << oldDistance << " km\n";
 }
 
 

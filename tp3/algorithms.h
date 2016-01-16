@@ -46,7 +46,7 @@ class OrOptEtoile : public RechercheLocale {
 /// recherche locale complete
 class RechLocComplete {
     protected:
-        std::vector<RechercheLocale> rl;
+        RechercheLocale rl[5];
 
     public:
 
