@@ -269,12 +269,9 @@ fin tant que
                                 c1->customer->close() > (c2->arrival + s.data().distance(c1->customer->id(), c2->customer->id())) && // c1 ferme apres arrivee c2 + service c2 + trajet c1 c2
                                 c2->next->customer->close() > (c2->arrival + s.data().distance(c1->customer->id(), c2->customer->id()) + s.data().distance(c1->customer->id(), c2->next->customer->id()) )// c2->next ferme apres avoir mis c1 et c1 arrival + service c1 + trajet
                             ) { // Alors on peut deplacer
+                                s.remove(*c1); // Enleve c1 de sa route, la close si necessaire
                                 s.insert(*c2, *c1); // Ajoute c1 apres c2 dans sa route
                                 std::cout << "Ajout du client " << c1->customer->id() << " apres le client " << c2->customer->id() << " dans la route " << r2->id  << std::endl;
-                                if(r1->depot.next == &(r1->depot)) { // Route vide, donc on la supprime
-                                    s.close_route(*r1);
-                                    ///std::cout << "Fermeture de la route" << r1->id << std::endl;
-                                }
                                 if(oldNbRoute > s.nb_routes() || oldDistance > s.total_distance()) { // J'ai mieux
                                     // En esperant que le total_distance se mette a jour directement
                                     // Sinon ca ne checkera que le gain en nb de tournees
