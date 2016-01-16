@@ -44,6 +44,7 @@ void insertion (WorkingSolution & sol) {
             toInsert = clients.erase(toInsert);         // on enleve des clients non desservis
         }
     }
+
 }
 /*
 NodeInfo & rechPrec(RouteInfo & tournee, NodeInfo & clients) {
@@ -107,67 +108,55 @@ list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list
 /*****************************************************************/
 
 /// recherche locale type cross
-class RechercheLocale {
-    public: virtual void operator() (WorkingSolution & s);
-};
+void Cross::operator() (WorkingSolution & s) {
 
-/// recherche locale type cross
-class Cross : public RechercheLocale {
-    public: void operator() (WorkingSolution & s) {
-
-    }
-};
+}
 
 /// recherche locale type 2 opt
-class Opt2 : public RechercheLocale {
-    public: void operator() (WorkingSolution & s) {
+void Opt2::operator() (WorkingSolution & s) {
 
-    }
-};
+}
+
 
 /// recherche locale type or opt
-class OrOpt : public RechercheLocale {
-    public: void operator() (WorkingSolution & s) {
+void OrOpt::operator() (WorkingSolution & s) {
 
-    }
-};
+}
 
 /// cas particulier de la recherche locale type 2 opt
-class Opt2Etoile : public RechercheLocale {
-    public: void operator() (WorkingSolution & s) {
+void Opt2Etoile::operator() (WorkingSolution & s) {
 
-    }
-};
+}
 
 /// cas particulier de la recherche locale type or opt
-class OrOptEtoile : public RechercheLocale {
-    public: void operator() (WorkingSolution & s) {
+void OrOptEtoile::operator() (WorkingSolution & s) {
 
-    }
-};
+}
 
 /// recherche locale complete
-class RechLocComplete {
-    protected:
-        vector<RechercheLocale> rl;
+RechLocComplete::RechLocComplete() {
+    rl.push_back(Opt2Etoile());
+    rl.push_back(OrOptEtoile());
+    rl.push_back(Opt2());
+    rl.push_back(OrOpt());
+    rl.push_back(Cross());
+}
 
-    public:
+void RechLocComplete::operator() (WorkingSolution & s) {
+    unsigned    k = 0,
+                oldDistance = s.total_distance(),
+                oldNbRoutes = s.nb_routes();
+    cout << "coucou on a : " << oldNbRoutes << " routes et " << oldDistance << " km\n";
+    while(k < 5) {
 
-        RechLocComplete() {
-            rl.push_back(Opt2Etoile());
-            rl.push_back(OrOptEtoile());
-            rl.push_back(Opt2());
-            rl.push_back(OrOpt());
-            rl.push_back(Cross());
+        rl[k++](s);
+        if(oldDistance > s.total_distance() || oldNbRoutes > s.nb_routes()) {
+            k = 0;
         }
+    }
+}
 
-        void operator() (WorkingSolution & s) {
-            unsigned k = 1;
-            while(k < 6) {
-            }
-        }
 
-};
 
 /*****************************************************************/
 /*****************************************************************/
