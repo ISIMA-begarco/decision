@@ -140,7 +140,7 @@
 	<algorithm>
 	<cassert>
 
-1452949872 source:c:\users\benji\github\decision\tp3\main.cpp
+1452967910 source:c:\users\benji\github\decision\tp3\main.cpp
 	"bkr.h"
 	"algorithms.h"
 	<iostream>
@@ -163,7 +163,7 @@
 	<sstream>
 	<cstdlib>
 
-1452965063 source:c:\users\benji\github\decision\tp3\algorithms.cpp
+1452967910 source:c:\users\benji\github\decision\tp3\algorithms.cpp
 	"algorithms.h"
 	"workingsolution.h"
 	"CompareMiddleTW.h"

@@ -48,7 +48,7 @@ void test_solution (const Data & data, const BKR & bkr)
   {
     //std::cout << "dummy solution" << std::endl;
     start = std::chrono::system_clock::now();
-    insertion (sol);
+    insertion(sol);
     sol.check();
     end = std::chrono::system_clock::now();
     duration = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds> (end - start).count();
@@ -80,8 +80,8 @@ int main (int argc, char * argv[])
 
   // load the BKR
   BKR bkr(data);
-  std::cout << "BKR = " << bkr << std::endl;
-  std::cout << std::endl;
+  //std::cout << "BKR = " << bkr << std::endl;
+  //std::cout << std::endl;
 
   // test the solution functionalities
   if (true)

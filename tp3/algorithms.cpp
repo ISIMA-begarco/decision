@@ -9,17 +9,21 @@
 using namespace std;
 
 void dummy (WorkingSolution & sol) {
-  sol.clear();
+    std::cout << "Debut dummy" << std::endl;
+    sol.clear();
 
 
-  for (auto & node: sol.nodes())   {
-    if (node.customer->id() != sol.data().depot()) {
-      sol.open_specific_route(node);
+    for (auto & node: sol.nodes())   {
+        if (node.customer->id() != sol.data().depot()) {
+            sol.open_specific_route(node);
+        }
     }
-  }
+
+  std::cout << "Fin dummy" << std::endl;
 }
 
 void insertion (WorkingSolution & sol) {
+    std::cout << "Debut insertion" << std::endl;
     vector<NodeInfo> clientsVector;
     sol.clear();
 
@@ -45,8 +49,15 @@ void insertion (WorkingSolution & sol) {
             toInsert = clients.erase(toInsert);         // on enleve des clients non desservis
         }
     }
-    RechLocComplete loc;
-    loc(sol);
+
+    std::cout << "Fin insertion" << std::endl;
+
+    std::cout << "Recherche locale a faire" <<std::endl;
+    RechercheLocale * oropt =  new OrOpt();
+    oropt->operator()(sol);
+    std::cout << "Fin recherche locale" << std::endl;
+//    RechLocComplete loc;
+//    loc(sol);
 }
 /*
 NodeInfo & rechPrec(RouteInfo & tournee, NodeInfo & clients) {
@@ -235,8 +246,8 @@ fin tant que
     std::cout << "On commence a faire le OR-OPT" << std::endl;
 
     while(optimize == true) {
-        for(RouteInfo* r1 = s.first(); r1 != NULL; r1 = r1->next_) { // Pour chaque tournee 1
-            for(RouteInfo* r2 = s.first(); r2 != NULL; r2 = r2->next_) { // Pour chaque tournee 2
+        for(RouteInfo* r1 = s.first(); r1 != NULL && optimize; r1 = r1->next_) { // Pour chaque tournee 1
+            for(RouteInfo* r2 = s.first(); r2 != NULL && optimize; r2 = r2->next_) { // Pour chaque tournee 2
 
                 if(r1->id != r2->id) { // On ne deplace pas le client dans la meme tournee
                     std::cout << "On va tester les clients de tournees differentes"  << std::endl;
@@ -268,13 +279,10 @@ fin tant que
                                     std::cout << "On a arrette d'optimiser"  << std::endl;
                                 }
                             }
-
                         }
                     }
                 }
-
             }
-
         }
     }
     std::cout << "On sort du OR-OPT" << std::endl;
