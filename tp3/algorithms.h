@@ -5,4 +5,5 @@
 
 // algorithms on the solution
 void dummy        (WorkingSolution &);
+void insertion    (WorkingSolution &);
 std::list<NodeInfo>::iterator rechClientAInserer(const std::list<NodeInfo> & clients, std::list<NodeInfo>::iterator from, const RouteInfo ri, WorkingSolution & sol);

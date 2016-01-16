@@ -8,7 +8,7 @@
 
 using namespace std;
 
-void dummy0 (WorkingSolution & sol) {
+void dummy (WorkingSolution & sol) {
   sol.clear();
 
 
@@ -19,7 +19,7 @@ void dummy0 (WorkingSolution & sol) {
   }
 }
 
-void dummy (WorkingSolution & sol) {
+void insertion (WorkingSolution & sol) {
     vector<NodeInfo> clientsVector;
     sol.clear();
 
@@ -100,3 +100,41 @@ list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list
     heuristique débile
     heuristique fusion
 **/
+
+
+/*****************************************************************/
+/**         Recherche locale                                    **/
+/*****************************************************************/
+
+/// recherche locale complete
+void rechLocComplete() {
+
+}
+
+/// recherche locale type cross
+void cross() {
+
+}
+
+/// recherche locale type 2 opt
+void opt2() {
+
+}
+
+/// recherche locale type or opt
+void orOpt() {
+
+}
+
+/// cas particulier de la recherche locale type 2 opt
+void opt2Etoile() {
+
+}
+
+/// cas particulier de la recherche locale type or opt
+void orOptEtoile() {
+
+}
+
+/*****************************************************************/
+/*****************************************************************/
