@@ -229,8 +229,10 @@ fin tant que
 
 **/
 
-bool optimize = true;
-int oldNbRoute = s.nb_routes(), oldDistance = s.total_distance();
+    bool optimize = true;
+    int oldNbRoute = s.nb_routes(), oldDistance = s.total_distance();
+
+    std::cout << "On commence a faire le OR-OPT" << std::endl;
 
     while(optimize == true) {
         for(RouteInfo* r1 = s.first(); r1 != NULL; r1 = r1->next_) { // Pour chaque tournee 1
