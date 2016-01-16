@@ -104,7 +104,7 @@ list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list
 
 /**
     heuristique insertion
-    heuristique débile
+    heuristique dï¿½bile
     heuristique fusion
 **/
 
@@ -193,10 +193,85 @@ void Opt2::operator() (WorkingSolution & s) {
 }
 
 
-/// recherche locale type or opt
+/** recherche locale type or opt
+ * \brief Extrait un sommet d'une tournee et va tenter de l'inserer dans une autre
+ *
+ * \param La solution dans la quelle executer la recherche locale
+*/
 void OrOpt::operator() (WorkingSolution & s) {
-    int i =5;
-    i + 5;
+/** Guideline
+
+tant que j'ameliore alors
+
+Pour toute tournee t1
+Pour toute tournee t1
+
+si t1 != t2 alors
+
+pour chaque client c1 dans t1
+pour chaque client c2 dans t2
+
+si je respecte
+    ya un chemin entre c1 et c2
+    la demande de c1 ajoutee au total de t2 ne depasse pas la capacite
+    c1 ferme apres que j'ai traite c2
+    c2->next ferme apres que j'ai simule l'ajout de c1
+    [pas besoin de check dans t1 car ca marche forcement]
+Alors
+    je peux ajouter c1 dans t2 apres c2
+    si apres ca t1 est vide alors je ferme la tournee
+    je calcule les ameliorations
+fin si
+
+fin pour x4
+
+fin tant que
+
+**/
+
+bool optimize = true;
+int oldNbRoute = s.nb_routes(), oldDistance = s.total_distance();
+
+    while(optimize == true) {
+        for(RouteInfo r1 = s.first(); r1 != NULL; r1 = r1.next) { // Pour chaque tournee 1
+            for(RouteInfo r2 = s.first(); r2 != NULL; r2 = r2.next) { // Pour chaque tournee 2
+
+                if(r1 != r2) { // On ne deplace pas le client dans la meme tournee
+
+                    for(NodeInfo c1 = r1->depot.next; c1 != r1->depot; c1 = c1->next) { // Pour chaque client de la tournee 1, sauf le depot
+                        for(NodeInfo c2 = r2->depot; c2 != r2->depot.prev; c2 = c2->next) { // Pour chaque client de la tournee 2
+
+                            if(
+                                s.data().is_valid(c1->customer->id(), c2->customer->id()) && // Il y a un chemin entre les 2
+                                r2->depot.load + c1->customer->demand_ < s.data().fleetCapacity && // respect charge de la tournee
+                                c1->customer->close() > (c2->arrival + s.data().distance(c1->customer->id(), c2->customer->id())) && // c1 ferme apres arrivee c2 + service c2 + trajet c1 c2
+                                c2->next->customer->close() > (c2->arrival + s.data().distance(c1->customer->id(), c2->customer->id()) + s.data().distance(c1->customer->id(), c2->next->customer->id()) )// c2->next ferme apres avoir mis c1 et c1 arrival + service c1 + trajet
+                            ) { // Alors on peut deplacer
+                                s.insert(c2, c1); // Ajoute c1 apres c2 dans sa route
+                                if(r1->depot->next == r1->depot) { // Route vide, donc on la supprime
+                                    s.close_route(r1);
+                                }
+                                if(oldNbRoute > s.nb_routes() || oldDistance > s.total_distance()) { // J'ai mieux
+                                    // En esperant que le total_distance se mette a jour directement
+                                    // Sinon ca ne checkera que le gain en nb de tournees
+                                    oldNbRoute = s.nb_routes();
+                                    oldDistance = s.total_distance();
+                                } else { // pas mieux
+                                    // Ca peut etre mieux en nbRoutes toujours, mais pas forcement en distance
+                                    // donc j'arrette que si je suis pas mieux pour les 2
+                                    // sinon faut tester le gain en distance avant d'inserer dans l'autre route
+                                    optimize = false;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+            }
+
+        }
+    }
 }
 
 /// cas particulier de la recherche locale type 2 opt
