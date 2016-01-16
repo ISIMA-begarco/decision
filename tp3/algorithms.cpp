@@ -106,35 +106,68 @@ list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list
 /**         Recherche locale                                    **/
 /*****************************************************************/
 
-/// recherche locale complete
-void rechLocComplete() {
-
-}
+/// recherche locale type cross
+class RechercheLocale {
+    public: virtual void operator() (WorkingSolution & s);
+};
 
 /// recherche locale type cross
-void cross() {
+class Cross : public RechercheLocale {
+    public: void operator() (WorkingSolution & s) {
 
-}
+    }
+};
 
 /// recherche locale type 2 opt
-void opt2() {
+class Opt2 : public RechercheLocale {
+    public: void operator() (WorkingSolution & s) {
 
-}
+    }
+};
 
 /// recherche locale type or opt
-void orOpt() {
+class OrOpt : public RechercheLocale {
+    public: void operator() (WorkingSolution & s) {
 
-}
+    }
+};
 
 /// cas particulier de la recherche locale type 2 opt
-void opt2Etoile() {
+class Opt2Etoile : public RechercheLocale {
+    public: void operator() (WorkingSolution & s) {
 
-}
+    }
+};
 
 /// cas particulier de la recherche locale type or opt
-void orOptEtoile() {
+class OrOptEtoile : public RechercheLocale {
+    public: void operator() (WorkingSolution & s) {
 
-}
+    }
+};
+
+/// recherche locale complete
+class RechLocComplete {
+    protected:
+        vector<RechercheLocale> rl;
+
+    public:
+
+        RechLocComplete() {
+            rl.push_back(Opt2Etoile());
+            rl.push_back(OrOptEtoile());
+            rl.push_back(Opt2());
+            rl.push_back(OrOpt());
+            rl.push_back(Cross());
+        }
+
+        void operator() (WorkingSolution & s) {
+            unsigned k = 1;
+            while(k < 6) {
+            }
+        }
+
+};
 
 /*****************************************************************/
 /*****************************************************************/

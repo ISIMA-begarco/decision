@@ -53,7 +53,7 @@
 	<algorithm>
 	<cassert>
 
-1449831943 o:\onedrive\github\decision\tp3\algorithms.h
+1452937736 o:\onedrive\github\decision\tp3\algorithms.h
 	<vector>
 	<list>
 	"workingsolution.h"
@@ -87,7 +87,7 @@
 	<algorithm>
 	<cassert>
 
-1448559097 source:o:\onedrive\github\decision\tp3\main.cpp
+1452937752 source:o:\onedrive\github\decision\tp3\main.cpp
 	"bkr.h"
 	"algorithms.h"
 	<iostream>
