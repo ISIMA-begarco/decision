@@ -21,7 +21,7 @@ void dummy (WorkingSolution & sol) {
 
   std::cout << "Fin dummy" << std::endl;
 
-for(int i = 0; i < 20; i++) {
+for(int i = 0; i < 400; i++) {
 std::cout << "Recherche locale a faire" <<std::endl;
 RechercheLocale * oropt =  new OrOpt();
 oropt->operator()(sol);
@@ -234,17 +234,14 @@ void OrOpt::operator() (WorkingSolution & s) {
             for(NodeInfo* c1 = r1->depot.next; c1->customer->id() != 0; c1 = c1->next) { // Pour chaque client de la tournee 1, sauf le depot
                 for(NodeInfo* c2 = r2->depot.next; c2->customer->id() != 0; c2 = c2->next) { // Pour chaque client de la tournee 2
 ///                    std::cout << "Test ajout client " << c1->customer->id() << " (route " << r1->id << ") apres client " << c2->customer->id() << " (route " << r2->id << ")"  << std::endl;
-                    if(
-                        c1->route->id != c2->route->id && // Pour eviter de se mordre la queue
-                        s.data().is_valid(c1->customer->id(), c2->customer->id()) && // Il y a un chemin entre les 2
-//    OBSOLETE            r2->depot.load + c1->customer->demand() < s.data().fleetCapacity() && // respect charge de la tournee
-//    OBSOLETE            (c1->customer->close()) > (c2->arrival + s.data().distance(c2->customer->id(), c1->customer->id())) && // c1 ferme apres arrivee c2 + service c2 + trajet c1 c2
-//    OBSOLETE            c2->next->customer->close() > (c2->arrival + s.data().distance(c1->customer->id(), c2->customer->id()) + s.data().distance(c1->customer->id(), c2->next->customer->id()) ) && // c2->next ferme apres avoir mis c1 et c1 arrival + service c1 + trajet
-                        s.is_feasible(*c2, c1->customer->demand(), (c2->arrival + s.data().distance(c2->customer->id(), c1->customer->id()) + s.data().distance(c1->customer->id(), c2->next->customer->id()) - s.data().distance(c2->customer->id(), c2->next->customer->id())) ) // Teste capacity + le detour
-                    ) { // Alors on peut deplacer
-                        s.remove(*c1); // Enleve c1 de sa route, la close si necessaire
-                        s.insert(*c2, *c1); // Ajoute c1 apres c2 dans sa route
-///                        std::cout << "Ajout du client " << c1->customer->id() << " apres le client " << c2->customer->id() << " dans la route " << r2->id  << std::endl;
+                    if(c1->route->id != c2->route->id && s.data().is_valid(c1->customer->id(), c2->customer->id())) { // On est pas dans la meme tournee et le chemin existe
+                        // Alors on peut deplacer
+                        Time incr = s.data().distance(c2->customer->id(), c1->customer->id()) + s.data().distance(c1->customer->id(), c2->next->customer->id()) - s.data().distance(c2->customer->id(), c2->next->customer->id());
+                        if(s.is_feasible(*c2, c1->customer->demand(), incr)) {
+                            s.remove(*c1); // Enleve c1 de sa route, la close si necessaire
+                            s.insert(*c2, *c1); // Ajoute c1 apres c2 dans sa route
+///                            std::cout << "Ajout du client " << c1->customer->id() << " apres le client " << c2->customer->id() << " dans la route " << r2->id  << std::endl;
+                        }
                     }
                 }
             }
