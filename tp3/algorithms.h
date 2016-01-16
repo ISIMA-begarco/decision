@@ -46,7 +46,7 @@ class OrOptEtoile : public RechercheLocale {
 /// recherche locale complete
 class RechLocComplete {
     protected:
-        RechercheLocale rl[5];
+        RechercheLocale * rl[5];
 
     public:
 
