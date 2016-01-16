@@ -233,23 +233,25 @@ bool optimize = true;
 int oldNbRoute = s.nb_routes(), oldDistance = s.total_distance();
 
     while(optimize == true) {
-        for(RouteInfo r1 = s.first(); r1 != NULL; r1 = r1.next) { // Pour chaque tournee 1
-            for(RouteInfo r2 = s.first(); r2 != NULL; r2 = r2.next) { // Pour chaque tournee 2
+        for(RouteInfo* r1 = s.first(); r1 != NULL; r1 = r1->next_) { // Pour chaque tournee 1
+            for(RouteInfo* r2 = s.first(); r2 != NULL; r2 = r2->next_) { // Pour chaque tournee 2
 
-                if(r1 != r2) { // On ne deplace pas le client dans la meme tournee
-
-                    for(NodeInfo c1 = r1->depot.next; c1 != r1->depot; c1 = c1->next) { // Pour chaque client de la tournee 1, sauf le depot
-                        for(NodeInfo c2 = r2->depot; c2 != r2->depot.prev; c2 = c2->next) { // Pour chaque client de la tournee 2
-
+                if(r1->id != r2->id) { // On ne deplace pas le client dans la meme tournee
+                    std::cout << "On va tester les clients de tournees differentes"  << std::endl;
+                    for(NodeInfo* c1 = r1->depot.next; c1->customer->id() != r1->depot.customer->id(); c1 = c1->next) { // Pour chaque client de la tournee 1, sauf le depot
+                        for(NodeInfo* c2 = &(r2->depot); c2->customer->id() != r2->depot.prev->customer->id(); c2 = c2->next) { // Pour chaque client de la tournee 2
+                            std::cout << "Test ajout client " << c1->customer->id() << " (route " << r1->id << ") apres client " << c2->customer->id() << " (route " << r2->id << ")"  << std::endl;
                             if(
                                 s.data().is_valid(c1->customer->id(), c2->customer->id()) && // Il y a un chemin entre les 2
-                                r2->depot.load + c1->customer->demand_ < s.data().fleetCapacity && // respect charge de la tournee
+                                r2->depot.load + c1->customer->demand() < s.data().fleetCapacity() && // respect charge de la tournee
                                 c1->customer->close() > (c2->arrival + s.data().distance(c1->customer->id(), c2->customer->id())) && // c1 ferme apres arrivee c2 + service c2 + trajet c1 c2
                                 c2->next->customer->close() > (c2->arrival + s.data().distance(c1->customer->id(), c2->customer->id()) + s.data().distance(c1->customer->id(), c2->next->customer->id()) )// c2->next ferme apres avoir mis c1 et c1 arrival + service c1 + trajet
                             ) { // Alors on peut deplacer
-                                s.insert(c2, c1); // Ajoute c1 apres c2 dans sa route
-                                if(r1->depot->next == r1->depot) { // Route vide, donc on la supprime
-                                    s.close_route(r1);
+                                s.insert(*c2, *c1); // Ajoute c1 apres c2 dans sa route
+                                std::cout << "Ajout du client " << c1->customer->id() << " apres le client " << c2->customer->id() << " dans la route " << r2->id  << std::endl;
+                                if(r1->depot.next == &(r1->depot)) { // Route vide, donc on la supprime
+                                    s.close_route(*r1);
+                                    std::cout << "Fermeture de la route" << r1->id << std::endl;
                                 }
                                 if(oldNbRoute > s.nb_routes() || oldDistance > s.total_distance()) { // J'ai mieux
                                     // En esperant que le total_distance se mette a jour directement
@@ -261,6 +263,7 @@ int oldNbRoute = s.nb_routes(), oldDistance = s.total_distance();
                                     // donc j'arrette que si je suis pas mieux pour les 2
                                     // sinon faut tester le gain en distance avant d'inserer dans l'autre route
                                     optimize = false;
+                                    std::cout << "On a arrette d'optimiser"  << std::endl;
                                 }
                             }
 
@@ -272,6 +275,7 @@ int oldNbRoute = s.nb_routes(), oldDistance = s.total_distance();
 
         }
     }
+    std::cout << "On sort du OR-OPT" << std::endl;
 }
 
 /// cas particulier de la recherche locale type 2 opt
