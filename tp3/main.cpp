@@ -48,7 +48,7 @@ void test_solution (const Data & data, const BKR & bkr)
   {
     //std::cout << "dummy solution" << std::endl;
     start = std::chrono::system_clock::now();
-    insertion(sol); std::cout << "solcheck ..." << std::endl;
+    dummy(sol); std::cout << "solcheck ..." << std::endl;
     sol.check(); std::cout << "solcheck ok" << std::endl;
     end = std::chrono::system_clock::now();
     duration = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds> (end - start).count();
