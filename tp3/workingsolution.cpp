@@ -369,7 +369,7 @@ bool WorkingSolution::check () const
   // check the evaluations
   assert((cpt_routes == nb_routes_) && "wrong number of routes");
   assert((cpt_clients == data_.nb_clients()) && "some unreferenced clients");
-  std::cout << "total_distance_ = " << total_distance_ << " computed = " << cpt_distance << std::endl;
+  //std::cout << "total_distance_ = " << total_distance_ << " computed = " << cpt_distance << std::endl;
   assert((cpt_distance == total_distance_) && "wrong total distance");
 
   // check the free route list

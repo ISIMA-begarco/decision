@@ -226,20 +226,50 @@ void Opt2::operator() (WorkingSolution & s) {
 
 /// recherche locale type or opt
 void OrOpt::operator() (WorkingSolution & s) {
-    RouteInfo * route = s.first();
-    unsigned i = 0, j = 0 ;
+    std::cout << "On commence a faire le OR-OPT" << std::endl;
+    Opt2Etoile()(s);
     bool optimise = false;
+    unsigned i = 0, j = 0;
+    RouteInfo* r1 = s.first();
+    RouteInfo* r2 = NULL;
+    while( i < s.nb_routes() && !optimise ) { /// Pour chaque tournee 1
+        r2 = r1->next_;
+        j = i+1;
+        while( j < s.nb_routes() && !optimise ) { /// Pour chaque tournee 2, ou r2 = s.first et tester si pas meme tournee
+           /// std::cout << "Couple route " << r1->id << " ; " << r2->id <<std::endl;
+           /// std::cout << "On va tester les clients de tournees differentes"  << std::endl;
+            NodeInfo* c1 = r1->depot.next;
+            while( c1->customer->id() != 0 && !optimise ) { // Pour chaque client de la tournee 1, sauf le depot
+                NodeInfo* c2 = r2->depot.next;
+                while( c2->customer->id() != 0 && !optimise ) { // Pour chaque client de la tournee 2
+                    ///std::cout << "Test ajout client " << c1->customer->id() << " (route " << r1->id << ") apres client " << c2->customer->id() << " (route " << r2->id << ")"  << std::endl;
+                    if(c1->route->id != c2->route->id && s.data().is_valid(c1->customer->id(), c2->customer->id())
+                       && c2->next != c2->prev) { // On est pas dans la meme tournee et le chemin existe
+                        // Alors on peut deplacer
+                        Time incr = std::max(c1->arrival + s.data().distance(c1->customer->id(), c2->customer->id()), c2->customer->open()) + s.data().distance(c2->customer->id(), c1->next->customer->id()) - c1->next->arrival;
+                        cout << "l'incr vaut " << incr << endl;
+                        if( c1->arrival + s.data().distance(c1->customer->id(), c2->customer->id()) < c2->customer->close() && /// si c2 est ok a cette place
+                            s.is_feasible(*(c1->next), c2->customer->demand(), incr)) { /// et que la fin de r1 aussi
+                                cout << "bleu" << endl;
+                            s.remove(*c2); // Enleve c1 de sa route, la close si necessaire
+                            s.insert(*c1, *c2); // Ajoute c1 apres c2 dans sa route
+                                cout << "rouge" << endl;
+                            std::cout << "Ajout du client " << c2->customer->id() << " apres le client " << c1->customer->id() << " dans la route " << r1->id  << std::endl;
 
-    while( i < s.nb_routes() ) {
-        NodeInfo * client = route->depot.next;
-        while( client->customer->id() != route->depot.customer->id() ) {
-            //cout << client->customer->id() << " ";
-            client = client->next;
+                            optimise = true;
+                        }
+                    }
+                    c2 = c2->next;
+                }
+                c1 = c1->next;
+            }
+            j++;
+            r2 = r2->next_;
         }
         i++;
-        route = route->next_;
-        //cout << endl;
+        r1 = r1->next_;
     }
+    std::cout << "On a fini de faire le OR-OPT" << std::endl;
 }
 
 /// cas particulier de la recherche locale type 2 opt
@@ -251,12 +281,12 @@ void Opt2Etoile::operator() (WorkingSolution & s) {
     while( i < s.nb_routes() ) {
         NodeInfo * client = route->depot.next;
         while( client->customer->id() != route->depot.customer->id() ) {
-            //cout << client->customer->id() << " ";
+            cout << client->customer->id() << " ";
             client = client->next;
         }
         i++;
         route = route->next_;
-        //cout << endl;
+        cout << endl;
     }
 }
 
@@ -271,7 +301,7 @@ RechLocComplete::RechLocComplete() {
     rl[0] = new Opt2Etoile();
     rl[1] = new OrOptEtoile();
     rl[2] = new Opt2();
-    rl[3] = new OrOpt();
+    rl[3] = new OrOpt();            ATTENTION verifier que ca ameliore bien la solution
     rl[4] = new Cross();
 }
 
@@ -284,13 +314,22 @@ void RechLocComplete::operator() (WorkingSolution & s) {
     while(k < 5) {
         rl[k++]->operator()(s);
         if(oldDistance > s.total_distance() || oldNbRoutes > s.nb_routes()) {
-            k = 0;
+            k = 2;
             oldNbRoutes = s.nb_routes();
             oldDistance = s.total_distance();
             max--;
         }
     }
     cout << "coucou on a : " << oldNbRoutes << " routes et " << oldDistance << " km\n";
+
+    cout << "Calculs" << endl;
+    cout << "Distance 00 82 = " << s.data().distance(00,82) << endl;
+    cout << "Distance 82 12 = " << s.data().distance(82,12) << endl;
+    cout << "Distance 12 99 = " << s.data().distance(12,99) << endl;
+    cout << "Distance 99 90 = " << s.data().distance(99,90) << endl;
+    cout << "Distance 90 00 = " << s.data().distance(90,00) << endl;
+    cout << "Calculs" << endl;
+    cout << "Distance 82 99 = " << s.data().distance(82,99) << endl;
 }
 
 

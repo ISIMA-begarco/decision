@@ -46,14 +46,14 @@
 	<sstream>
 	<cstdlib>
 
-1453021677 source:o:\onedrive\github\decision\tp3\algorithms.cpp
+1453027753 source:o:\onedrive\github\decision\tp3\algorithms.cpp
 	"algorithms.h"
 	"workingsolution.h"
 	"CompareMiddleTW.h"
 	<algorithm>
 	<cassert>
 
-1453018834 o:\onedrive\github\decision\tp3\algorithms.h
+1453022305 o:\onedrive\github\decision\tp3\algorithms.h
 	<vector>
 	<list>
 	"workingsolution.h"
@@ -87,7 +87,7 @@
 	<algorithm>
 	<cassert>
 
-1453021546 source:o:\onedrive\github\decision\tp3\main.cpp
+1453022305 source:o:\onedrive\github\decision\tp3\main.cpp
 	"bkr.h"
 	"algorithms.h"
 	<iostream>
@@ -95,7 +95,7 @@
 	<chrono>
 	<random>
 
-1453021121 source:o:\onedrive\github\decision\tp3\workingsolution.cpp
+1453024468 source:o:\onedrive\github\decision\tp3\workingsolution.cpp
 	"workingsolution.h"
 	<limits>
 	<algorithm>
