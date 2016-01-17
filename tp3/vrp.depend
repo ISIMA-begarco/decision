@@ -108,15 +108,15 @@
 1449832298 source:o:\onedrive\github\decision\tp3\comparemiddletw.cpp
 	"CompareMiddleTW.h"
 
-1448477505 source:c:\users\benji\github\decision\tp3\bkr.cpp
+1453066506 source:c:\users\benji\github\decision\tp3\bkr.cpp
 	"bkr.h"
 	<fstream>
 	<algorithm>
 
-1448477505 c:\users\benji\github\decision\tp3\bkr.h
+1453066506 c:\users\benji\github\decision\tp3\bkr.h
 	"data.h"
 
-1453065751 c:\users\benji\github\decision\tp3\data.h
+1453066506 c:\users\benji\github\decision\tp3\data.h
 	<string>
 	<iostream>
 	<vector>
@@ -128,10 +128,10 @@
 1452949872 c:\users\benji\github\decision\tp3\comparemiddletw.h
 	"workingsolution.h"
 
-1448477505 c:\users\benji\github\decision\tp3\workingsolution.h
+1453066506 c:\users\benji\github\decision\tp3\workingsolution.h
 	"data.h"
 
-1453065750 source:c:\users\benji\github\decision\tp3\data.cpp
+1453066506 source:c:\users\benji\github\decision\tp3\data.cpp
 	"data.h"
 	<fstream>
 	<sstream>
@@ -140,7 +140,7 @@
 	<algorithm>
 	<cassert>
 
-1453045442 source:c:\users\benji\github\decision\tp3\main.cpp
+1453066201 source:c:\users\benji\github\decision\tp3\main.cpp
 	"bkr.h"
 	"algorithms.h"
 	<iostream>
@@ -148,12 +148,12 @@
 	<chrono>
 	<random>
 
-1453065749 c:\users\benji\github\decision\tp3\algorithms.h
+1453066506 c:\users\benji\github\decision\tp3\algorithms.h
 	<vector>
 	<list>
 	"workingsolution.h"
 
-1453065470 source:c:\users\benji\github\decision\tp3\workingsolution.cpp
+1453066506 source:c:\users\benji\github\decision\tp3\workingsolution.cpp
 	"workingsolution.h"
 	<limits>
 	<algorithm>
@@ -163,7 +163,7 @@
 	<sstream>
 	<cstdlib>
 
-1453065888 source:c:\users\benji\github\decision\tp3\algorithms.cpp
+1453066506 source:c:\users\benji\github\decision\tp3\algorithms.cpp
 	"algorithms.h"
 	"workingsolution.h"
 	"CompareMiddleTW.h"
