@@ -7,22 +7,7 @@
 #include <cassert>
 
 using namespace std;
-void aff(WorkingSolution & s) {
-    RouteInfo * route = s.first();
-    unsigned i = 0, j = 0 ;
-    bool optimise = false;
 
-    while( i < s.nb_routes() ) {
-        NodeInfo * client = route->depot.next;
-        while( client->customer->id() != route->depot.customer->id() ) {
-            cout << client->customer->id() << " ";
-            client = client->next;
-        }
-        i++;
-        route = route->next_;
-        cout << endl;
-    }
-}
 void dummy (WorkingSolution & sol) {
   sol.clear();
 
@@ -152,6 +137,23 @@ void updateArrivalRoute(WorkingSolution & sol, RouteInfo & route) {
         cur = cur->next;
     }
     route.depot.arrival = route.depot.prev->arrival+sol.data().distance(route.depot.prev->customer->id(),route.depot.customer->id());
+}
+
+void aff(WorkingSolution & s) {
+    RouteInfo * route = s.first();
+    unsigned i = 0, j = 0 ;
+    bool optimise = false;
+
+    while( i < s.nb_routes() ) {
+        NodeInfo * client = route->depot.next;
+        while( client->customer->id() != route->depot.customer->id() ) {
+            cout << client->customer->id() << " ";
+            client = client->next;
+        }
+        i++;
+        route = route->next_;
+        cout << endl;
+    }
 }
 
 /*****************************************************************/
