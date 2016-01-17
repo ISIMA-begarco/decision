@@ -20,7 +20,7 @@ void dummy (WorkingSolution & sol) {
   }
 }
 
-void insertion (WorkingSolution & sol) {
+void insertion (WorkingSolution & sol, bool random = true) {
     vector<NodeInfo> clientsVector;
     sol.clear();
 
@@ -30,9 +30,13 @@ void insertion (WorkingSolution & sol) {
             clientsVector.push_back(node);
     }
 
-    // Trie les clients par leur moyenne de fenetre de temps
-    // std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
-    std::random_shuffle(clientsVector.begin(), clientsVector.end());
+    if(random == true) {
+        std::random_shuffle(clientsVector.begin(), clientsVector.end());
+    } else {
+        // Trie les clients par leur moyenne de fenetre de temps
+        std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
+    }
+
 
     list<NodeInfo> clients(clientsVector.begin(), clientsVector.end());
     //for(auto line : clients)
@@ -52,8 +56,6 @@ void insertion (WorkingSolution & sol) {
     }
 
     sol.total_distance() = localDistance;
-//    RechLocComplete loc;
-//    loc(sol);
 }
 
 /** \brief Recherche quel client inserer a la fin d'une tournee
@@ -513,19 +515,23 @@ void RechLocComplete::operator() (WorkingSolution & s) {
 
 void MetaHeuristique(int maxIter, WorkingSolution & s1, WorkingSolution & s2) {
 // Base sur le multistart
+    RechLocComplete loc;
+
+    insertion(s1, false);
+    loc(s1);
+    s2 = s1;
 
     WorkingSolution actualSol = s1; // On conserve une copie de la meilleure actuelle
     WorkingSolution bestSolD = s1; // Meilleur solution en distance
     WorkingSolution bestSolN = s1; // Meilleur solution en nb de tournees
 
-    RechLocComplete loc;
     int maxLocale = 0;
 
     unsigned int oldDistance = std::numeric_limits<int>::max();
     Time actualDistance = s1.total_distance();
 
     for(int i = 0; i < maxIter; i++) { // On fait l'algo jusqu'a maxIter
-        std::cout << "Etape " << i << std::endl;
+        std::cout << "Iteration " << i << std::endl;
         oldDistance = std::numeric_limits<int>::max();
 
         // Heuristique d'insertion, les clients sont en shuffle

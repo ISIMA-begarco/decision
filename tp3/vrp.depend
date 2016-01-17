@@ -109,7 +109,7 @@
 1449832298 source:o:\onedrive\github\decision\tp3\comparemiddletw.cpp
 	"CompareMiddleTW.h"
 
-1453060605 source:c:\users\benji\github\decision\tp3\algorithms.cpp
+1453064270 source:c:\users\benji\github\decision\tp3\algorithms.cpp
 	"algorithms.h"
 	"workingsolution.h"
 	"CompareMiddleTW.h"
@@ -117,7 +117,7 @@
 	<cassert>
 	<cstdlib>
 
-1453059600 c:\users\benji\github\decision\tp3\algorithms.h
+1453063235 c:\users\benji\github\decision\tp3\algorithms.h
 	<vector>
 	<list>
 	"workingsolution.h"
@@ -164,7 +164,7 @@
 	<sstream>
 	<cstdlib>
 
-1453060467 source:c:\users\benji\github\decision\tp3\main.cpp
+1453063495 source:c:\users\benji\github\decision\tp3\main.cpp
 	"bkr.h"
 	"algorithms.h"
 	<iostream>
