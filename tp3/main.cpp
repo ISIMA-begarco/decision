@@ -54,7 +54,7 @@ void test_solution (const Data & data, const BKR & bkr)
     **/
 
     RechLocComplete meta;
-    meta.MetaHeuristique(50, sol);
+    meta.MetaHeuristique(200, sol);
 
     end = std::chrono::system_clock::now();
     duration = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds> (end - start).count();

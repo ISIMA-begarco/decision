@@ -309,7 +309,7 @@ void RechLocComplete::MetaHeuristique(int maxIter, WorkingSolution & s) {
     unsigned int oldDistance = std::numeric_limits<int>::max();
     Time actualDistance = s.total_distance();
 
-    for(unsigned int i = 0; i < maxIter; i++) { // On fait l'algo jusqu'a maxIter
+    for(int i = 0; i < maxIter; i++) { // On fait l'algo jusqu'a maxIter
         std::cout << "Etape " << i << std::endl;
         oldDistance = std::numeric_limits<int>::max();
 
