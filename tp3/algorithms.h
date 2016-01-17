@@ -53,6 +53,7 @@ class RechLocComplete {
     public:
 
         RechLocComplete();
+        virtual ~RechLocComplete();
         void operator() (WorkingSolution & s);
 
 };

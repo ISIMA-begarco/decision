@@ -529,6 +529,11 @@ RechLocComplete::RechLocComplete() {
     rl[4] = new Cross();
 }
 
+RechLocComplete::~RechLocComplete() {
+    for(unsigned i = 0 ; i < 5 ; i++)
+        delete rl[i];
+}
+
 void RechLocComplete::operator() (WorkingSolution & s) {
     unsigned    k = 0,
                 oldNbRoutes = s.nb_routes();
