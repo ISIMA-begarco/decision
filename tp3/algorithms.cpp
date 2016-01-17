@@ -141,8 +141,7 @@ void updateArrivalRoute(WorkingSolution & sol, RouteInfo & route) {
 
 void aff(WorkingSolution & s) {
     RouteInfo * route = s.first();
-    unsigned i = 0, j = 0 ;
-    bool optimise = false;
+    unsigned i = 0;
 
     while( i < s.nb_routes() ) {
         NodeInfo * client = route->depot.next;
@@ -156,14 +155,118 @@ void aff(WorkingSolution & s) {
     }
 }
 
+void swapClients(NodeInfo * c1, NodeInfo * c2) {
+    //cout << "On peut SWAPPER le SWAP" << endl;
+    NodeInfo * tmp;
+
+    /// suivant des actuelles
+    tmp = c1->next;
+    c1->next = c2->next;
+    c2->next = tmp;
+    /// precedant des actuelles
+    tmp = c1->prev;
+    c1->prev = c2->prev;
+    c2->prev = tmp;
+
+    /// suivant des precedant
+    tmp = c1->prev->next;
+    c1->prev->next = c2->prev->next;
+    c2->prev->next = tmp;
+    /// precedant des suivants
+    tmp = c1->next->prev;
+    c1->next->prev = c2->next->prev;
+    c2->next->prev = tmp;
+
+}
+
 /*****************************************************************/
 /**         Recherche locale                                    **/
 /*****************************************************************/
 
 /// recherche locale type cross
 void Cross::operator() (WorkingSolution & s) {
-    int i =5;
-    i + 5;
+    RouteInfo * route = s.first();
+    unsigned i = 0, j = 0 ;
+    bool optimise = false;
+
+    while( i < s.nb_routes() && !optimise ) {                                           ///
+        NodeInfo * client = route->depot.next;                                          /// pour tout A
+        while( client->customer->id() != route->depot.customer->id() && !optimise ) {   ///
+
+            RouteInfo * route2 = s.first();
+            j = 0;
+            while( j < s.nb_routes() && !optimise ) {                                               ///
+                if(j != i) {                                                                        /// pour tout B
+                    NodeInfo * client2 = route2->depot.next;                                        ///
+                    while(client2->customer->id() != route2->depot.customer->id() && !optimise) {   ///
+
+ /********************************************************************************************/
+                        bool    seul1 = (client->next == client->prev),
+                                seul2 = (client2->next == client2->prev),
+                                faisable1 = true,
+                                faisable2 = true;
+                        Id      id1 = client->customer->id(),
+                                id2 = client2->customer->id();
+                        if(!seul1) {    /// si il y a plusieurs éléments dans route 1
+                            Load capa = - client->customer->demand() + client2->customer->demand();
+                            Time variable = std::max(s.data().distance(client->prev->customer->id(), id2), (client2->customer->open() - client->prev->arrival));
+                            Time temps =    variable
+                                          + std::max(s.data().distance(id2, client->next->customer->id()), (client->next->customer->open() - client->prev->arrival + variable))
+                                          - (client->next->arrival - client->prev->arrival);
+//cout << "temps de décalage de la fin de route 1 " << temps << endl;
+                            faisable1 =     ( (route->depot.load - client->customer->demand() + client2->customer->demand()) <= s.data().fleetCapacity() )
+                                        &&  ( s.is_feasible(*(client->next), capa, temps) )
+                                        &&  ( client2->customer->close() >= (client->prev->arrival+s.data().distance(client->prev->customer->id(), id2)) );
+                        }
+                        if(faisable1) {
+                            if(!seul2) {    /// si il y a plusieurs éléments dans route 2
+                                Load capa = - client2->customer->demand() + client->customer->demand();
+                                Time variable = std::max(s.data().distance(client2->prev->customer->id(), id1), (client->customer->open() - client2->prev->arrival));
+                                Time temps =    variable
+                                              + std::max(s.data().distance(id1, client2->next->customer->id()), (client2->next->customer->open() - client2->prev->arrival + variable))
+                                              - (client2->next->arrival - client2->prev->arrival);
+//cout << "temps de décalage de la fin de route 2 " << temps << endl;
+                                faisable2 =     ( (route2->depot.load - client2->customer->demand() + client->customer->demand()) <= s.data().fleetCapacity() )
+                                            &&  ( s.is_feasible(*(client2->next), capa, temps) )
+                                            &&  ( client->customer->close() >= (client2->prev->arrival+s.data().distance(client2->prev->customer->id(), id1)) );
+                            }
+                        }
+                        if(faisable1 && faisable2) {
+                            Time oldDistance = route->distance + route2->distance;
+                            swapClients(client, client2);
+
+                            s.update2(*(client->prev));
+                            s.update2(*(client2->prev));
+                            updateDistanceRoute(s, *route);
+                            updateDistanceRoute(s, *route2);
+                            //cout << " Old value = " << oldDistance << " - New value = " << route->distance+route2->distance << endl;
+                            if(route->distance+route2->distance < oldDistance) {
+                                optimise = true;
+                                s.total_distance() += (-oldDistance+route->distance+route2->distance);
+                                //cout << "OPTIMISATION swap " << client->customer->id() << " " << client2->customer->id() << endl;
+                            } else {
+                                swapClients(client, client2);
+                                s.update2(*(client->prev));
+                                s.update2(*(client2->prev));
+                                updateDistanceRoute(s, *route);
+                                updateDistanceRoute(s, *route2);
+                            }
+
+                        }
+/****************************************************************************************************/
+
+                        client2 = client2->next;
+                    }
+                }
+                route2 = route2->next_;
+                j++;
+            }
+
+            client = client->next;
+        }
+        route = route->next_;
+        i++;
+    }
 }
 
 /// recherche locale type 2 opt
@@ -238,7 +341,6 @@ void Opt2::operator() (WorkingSolution & s) {
         i++;
     }
 }
-
 
 /// recherche locale type or opt
 void OrOpt::operator() (WorkingSolution & s) {
@@ -367,8 +469,6 @@ void OrOptEtoile::operator() (WorkingSolution & s) {
                     if( c1->arrival + s.data().distance(c1->customer->id(), c2->customer->id()) < c2->customer->close() && /// si c2 est ok a cette place
                         s.is_feasible(*(c1->next), c2->customer->demand(), incr)) { /// et que la fin de r1 aussi
 
-                        Time oldDistance = r1->distance + r2->distance;
-                        NodeInfo * precC2 = c2->prev;
                         s.remove(*c2); // Enleve c1 de sa route, la close si necessaire
                         s.insert(*c1, *c2); // Ajoute c1 apres c2 dans sa route
                         //std::cout << "Ajout du client " << c2->customer->id() << " apres le client " << c1->customer->id() << " dans la route " << r1->id  << std::endl;
