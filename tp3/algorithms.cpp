@@ -30,7 +30,7 @@ void insertion (WorkingSolution & sol) {
     }
     // Trie les clients par leur moyenne de fenetre de temps
     std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
-    //std::random_shuffle(clientsVector.begin(), clientsVector.end());
+    std::random_shuffle(clientsVector.begin(), clientsVector.end());
     std::random_shuffle(clientsVector.begin(), clientsVector.end());
 
     list<NodeInfo> clients(clientsVector.begin(), clientsVector.end());
@@ -140,6 +140,30 @@ void updateArrivalRoute(WorkingSolution & sol, RouteInfo & route) {
     route.depot.arrival = route.depot.prev->arrival+sol.data().distance(route.depot.prev->customer->id(),route.depot.customer->id());
 }
 
+void mergeRoutes (WorkingSolution & sol, const Id & a, const Id & b, const Time & saving) {
+  // no safety checks, supposed already done
+  // perform the connections
+  NodeInfo & orig = sol.nodes()[a];
+  NodeInfo & dest = sol.nodes()[b];
+  NodeInfo * odepotptr = orig.next;
+  NodeInfo * ddepotptr = dest.prev;
+
+  orig.next = &dest;
+  dest.prev = &orig;
+  odepotptr->prev = ddepotptr->prev;
+  odepotptr->prev->next = odepotptr;
+
+  RouteInfo * routeptr = odepotptr->route;
+  routeptr->distance += ddepotptr->route->distance + saving;
+  sol.total_distance() += saving;
+  //update(dest, orig.load, dest.arrival - std::max(orig.arrival, orig.customer->open()) + data_.distance(orig.customer->id(), dest.customer->id()), orig.route);
+  sol.update2(orig);
+
+  // tour to be removed
+  ddepotptr->prev = ddepotptr->next = ddepotptr;
+  sol.close_route(*(ddepotptr->route));
+}
+
 /*****************************************************************/
 /**         Recherche locale                                    **/
 /*****************************************************************/
@@ -227,7 +251,6 @@ void Opt2::operator() (WorkingSolution & s) {
 /// recherche locale type or opt
 void OrOpt::operator() (WorkingSolution & s) {
     //std::cout << "On commence a faire le OR-OPT" << std::endl;
-    Opt2Etoile()(s);
     bool optimise = false;
     unsigned i = 0, j = 0;
     RouteInfo* r1 = s.first();
@@ -278,6 +301,58 @@ void OrOpt::operator() (WorkingSolution & s) {
 
 /// cas particulier de la recherche locale type 2 opt
 void Opt2Etoile::operator() (WorkingSolution & s) {
+    RouteInfo * route1 = s.first();
+    RouteInfo * route2 = NULL;
+    unsigned i = 0, j = 0 ;
+    bool optimise = false;
+
+    while( i < s.nb_routes() && !optimise ) {           /// pour chaque route
+        route2 = s.first();
+        while( j < s.nb_routes() && !optimise ) {       /// on teste toutes les autres routes
+            if(route1->id != route2->id) {      /// sauf la meme
+                Time incrTemps = route1->depot.prev->arrival + s.data().distance(route1->depot.prev->customer->id(),route2->depot.next->customer->id()) - s.data().distance(route2->depot.customer->id(),route2->depot.next->customer->id());
+                if( s.is_feasible(*(route2->depot.next), route1->depot.load, incrTemps ) ) {
+                    //cout << "Optimisation possible entre " << route1->id << " et " << route2->id << endl;
+
+                    Time saving = - s.data().distance(route1->depot.prev->customer->id(),route1->depot.customer->id()) - s.data().distance(route2->depot.customer->id(),route2->depot.next->customer->id()) + std::max(s.data().distance(route1->depot.prev->customer->id(),route2->depot.next->customer->id()), route2->depot.next->customer->open() - route1->depot.prev->arrival );
+                    NodeInfo * orig = route1->depot.prev;
+
+
+                    ///chainage inter tournees
+                    route1->depot.prev->next = route2->depot.next;
+                    route2->depot.next->prev = route1->depot.prev;
+
+                    ///chainage au depot 1
+                    route1->depot.prev = route2->depot.prev;
+                    route1->depot.prev->next = &(route1->depot);
+
+                    /// chainage du depot 2 a lui meme
+                    route2->depot.next = &(route2->depot);
+                    route2->depot.prev = &(route2->depot);
+
+                    /// maj
+                    s.update2(*orig);
+                    route1->distance += (route2->distance + saving);
+                    s.total_distance() += saving;
+
+                    /// suppression
+                    s.close_route(*(route2));
+
+                    optimise = true;
+                }
+            }
+
+            j++;
+            route2 = route2->next_;
+        }
+        i++;
+        route1 = route1->next_;
+    }
+                   // cout << "Fin du Opt2Etoile" << endl;
+}
+
+/// cas particulier de la recherche locale type or opt
+void OrOptEtoile::operator() (WorkingSolution & s) {/*
     RouteInfo * route = s.first();
     unsigned i = 0, j = 0 ;
     bool optimise = false;
@@ -291,13 +366,7 @@ void Opt2Etoile::operator() (WorkingSolution & s) {
         i++;
         route = route->next_;
         cout << endl;
-    }
-}
-
-/// cas particulier de la recherche locale type or opt
-void OrOptEtoile::operator() (WorkingSolution & s) {
-    int i =5;
-    i + 5;
+    }*/
 }
 
 /// recherche locale complete
@@ -318,9 +387,10 @@ void RechLocComplete::operator() (WorkingSolution & s) {
     while(k < 5) {
         rl[k++]->operator()(s);
         if(oldDistance > s.total_distance() || oldNbRoutes > s.nb_routes()) {
-            k = 2;
+            k = 0;
             oldNbRoutes = s.nb_routes();
             oldDistance = s.total_distance();
+    cout << "coucou on a : " << oldNbRoutes << " routes et " << oldDistance << " km\n";
             max--;
         }
     }
