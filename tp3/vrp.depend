@@ -140,7 +140,7 @@
 	<algorithm>
 	<cassert>
 
-1452980886 source:c:\users\benji\github\decision\tp3\main.cpp
+1453042870 source:c:\users\benji\github\decision\tp3\main.cpp
 	"bkr.h"
 	"algorithms.h"
 	<iostream>
@@ -148,12 +148,12 @@
 	<chrono>
 	<random>
 
-1453037309 c:\users\benji\github\decision\tp3\algorithms.h
+1453042651 c:\users\benji\github\decision\tp3\algorithms.h
 	<vector>
 	<list>
 	"workingsolution.h"
 
-1452983379 source:c:\users\benji\github\decision\tp3\workingsolution.cpp
+1453043215 source:c:\users\benji\github\decision\tp3\workingsolution.cpp
 	"workingsolution.h"
 	<limits>
 	<algorithm>
@@ -163,10 +163,11 @@
 	<sstream>
 	<cstdlib>
 
-1453037439 source:c:\users\benji\github\decision\tp3\algorithms.cpp
+1453044978 source:c:\users\benji\github\decision\tp3\algorithms.cpp
 	"algorithms.h"
 	"workingsolution.h"
 	"CompareMiddleTW.h"
 	<algorithm>
 	<cassert>
+	<cstdlib>
 

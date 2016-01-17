@@ -128,7 +128,7 @@ void WorkingSolution::read(const std::string & filename) {
     }
 
     // clear the solution
-    std::cout << "clear the solution" << std::endl;
+    //std::cout << "clear the solution" << std::endl;
     clear();
 
     // read the number of routes
@@ -603,7 +603,7 @@ void WorkingSolution::remove (NodeInfo & node) {
     //std::cout << "initialization done" << std::endl;
 
     // disconnect the node from its neighbors
-    std::cout << "removing node " << node << std::endl;
+    //std::cout << "removing node " << node << std::endl;
     //std::cout << *(node.route) << std::endl;
     node.prev->next = node.next;
     node.next->prev = node.prev;

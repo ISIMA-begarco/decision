@@ -54,12 +54,12 @@ class RechLocComplete {
 
         RechLocComplete();
         void operator() (WorkingSolution & s);
-
-        void MetaHeuristique(int, WorkingSolution &);
+        
+        MetaHeuristique(int, WorkingSolution &);
 
 };
 
-/// Metaheuristique
+/// Metaheuristique 
 
 /*****************************************************************/
 /*****************************************************************/

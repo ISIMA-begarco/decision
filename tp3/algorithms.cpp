@@ -6,11 +6,12 @@
 #include <algorithm>
 #include <cassert>
 
+#include <cstdlib>
+
 using namespace std;
 
 void dummy (WorkingSolution & sol) {
     sol.clear();
-
 
     for (auto & node: sol.nodes()) {
         if (node.customer->id() != sol.data().depot()) {
@@ -28,8 +29,9 @@ void insertion (WorkingSolution & sol) {
         if (node.customer->id() != sol.data().depot())
             clientsVector.push_back(node);
     }
+
     // Trie les clients par leur moyenne de fenetre de temps
-    std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
+    //std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
     //std::random_shuffle(clientsVector.begin(), clientsVector.end());
     std::random_shuffle(clientsVector.begin(), clientsVector.end());
 
@@ -49,17 +51,12 @@ void insertion (WorkingSolution & sol) {
         updateDistanceRoute(sol, ri);
         localDistance += ri.distance;
     }
+
     sol.total_distance() = localDistance;
     RechLocComplete loc;
     loc(sol);
 }
-/*
-NodeInfo & rechPrec(RouteInfo & tournee, NodeInfo & clients) {
-    NodeInfo & prec = tournee.depot;
-    NodeInfo * cour =
-    while()
-}
-*/
+
 /** \brief Recherche quel client inserer a la fin d'une tournee
  *
  * \param Vecteur contenant les clients tries par moyenne de fenetre de temps
@@ -68,20 +65,7 @@ NodeInfo & rechPrec(RouteInfo & tournee, NodeInfo & clients) {
  * \param La solution courante
  * \return L'indice du client a inserer en fin de tournee, -1 si on en a pas
  *
- *//**
-int rechClientAInserer(const forward_list<NodeInfo> clients, unsigned int from, const RouteInfo ri, WorkingSolution & sol) {
-    unsigned int i = from;
-    // Date de fermeture de ce client > que date
-    while( i < clients.size()
-          && (     !(sol.data().is_valid(ri.depot.prev->customer->id(),clients[i].customer->id()))
-                || (clients[i].customer->close() < (ri.depot.prev->arrival + ri.depot.prev->customer->service()) )
-                || (clients[i].customer->demand() + ri.depot.load <  sol.data().fleetCapacity())
-             )
-         ){
-        i++;
-    }
-    return ((i > clients.size())? -1 : i);
-}**/
+ */
 
 list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list<NodeInfo>::iterator from, const RouteInfo ri, WorkingSolution & sol) {
     list<NodeInfo>::iterator i = from;
@@ -90,29 +74,16 @@ list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list
     // Date de fermeture de ce client > que date
 
     while( (i != clients.end())
-          && (     !(sol.data().is_valid(ri.depot.prev->customer->id(),i->customer->id()))
-                || (i->customer->close() < ri.depot.prev->arrival + sol.data().distance(ri.depot.prev->customer->id(),i->customer->id()) )
-                || (i->customer->demand() + ri.depot.load > sol.data().fleetCapacity())
-             )
+            && (     !(sol.data().is_valid(ri.depot.prev->customer->id(),i->customer->id()))
+                     || (i->customer->close() < ri.depot.prev->arrival + sol.data().distance(ri.depot.prev->customer->id(),i->customer->id()) )
+                     || (i->customer->demand() + ri.depot.load > sol.data().fleetCapacity())
+               )
          ) {
         i++;
     }
 
     return i;
 }
-
-///
-/// ATTENTION sol.data(i,j).distance contient le service de i + le trajet i->j
-///
-///     LES DISTANCES SONT LES TRAJETS + SERVICES PAS LES ATTENTES
-
-/**
-    heuristique insertion
-    heuristique débile
-    heuristique fusion
-**/
-
-
 
 /*****************************************************************/
 /**         Utile a la modif                                    **/
@@ -168,16 +139,16 @@ void Opt2::operator() (WorkingSolution & s) {
                         if(
                             (s.data().distance(client->customer->id(),client->next->customer->id()) +
                              s.data().distance(client2->customer->id(),client2->next->customer->id()))
-                           >
+                            >
                             (s.data().distance(client->customer->id(),client2->next->customer->id()) +
                              s.data().distance(client2->customer->id(),client->next->customer->id()))
-                          ) {  /// est-ce que l'on gagne du temps ???
+                        ) {  /// est-ce que l'on gagne du temps ???
                             Load incrCapa = client->load - client2->load;
                             Time incrTime = client2->arrival + s.data().distance(client2->customer->id(),client->next->customer->id()) - client->next->arrival,
                                  incrTime2 = client->arrival + s.data().distance(client->customer->id(),client2->next->customer->id()) - client2->next->arrival;
 
                             if( s.is_feasible(*(client->next), -incrCapa, incrTime) &&
-                                s.is_feasible(*(client2->next), incrCapa, incrTime2)
+                                    s.is_feasible(*(client2->next), incrCapa, incrTime2)
                               ) {       /// l'echange est-il possible ????
 
                                 /// on fait l'echange
@@ -234,20 +205,20 @@ void OrOpt::operator() (WorkingSolution & s) {
         r2 = r1->next_;
         j = i+1;
         while( j < s.nb_routes() && !optimise ) { /// Pour chaque tournee 2, ou r2 = s.first et tester si pas meme tournee
-           /// std::cout << "Couple route " << r1->id << " ; " << r2->id <<std::endl;
-           /// std::cout << "On va tester les clients de tournees differentes"  << std::endl;
+            /// std::cout << "Couple route " << r1->id << " ; " << r2->id <<std::endl;
+            /// std::cout << "On va tester les clients de tournees differentes"  << std::endl;
             NodeInfo* c1 = r1->depot.next;
             while( c1->customer->id() != 0 && !optimise ) { /// Pour chaque client de la tournee 1, sauf le depot
                 NodeInfo* c2 = r2->depot.next;
                 while( c2->customer->id() != 0 && !optimise ) { // Pour chaque client de la tournee 2
                     ///std::cout << "Test ajout client " << c1->customer->id() << " (route " << r1->id << ") apres client " << c2->customer->id() << " (route " << r2->id << ")"  << std::endl;
                     if(c1->route->id != c2->route->id && s.data().is_valid(c1->customer->id(), c2->customer->id())  /// si pas la meme route et chemin existe
-                       && c2->next != c2->prev) { /// On est pas dans la meme tournee et le chemin existe
+                            && c2->next != c2->prev) { /// On est pas dans la meme tournee et le chemin existe
                         /// Alors on peut deplacer
                         Time incr = std::max(c1->arrival + s.data().distance(c1->customer->id(), c2->customer->id()), c2->customer->open()) + s.data().distance(c2->customer->id(), c1->next->customer->id()) - c1->next->arrival;
                         //cout << "l'incr vaut " << incr << endl;
                         if( c1->arrival + s.data().distance(c1->customer->id(), c2->customer->id()) < c2->customer->close() && /// si c2 est ok a cette place
-                            s.is_feasible(*(c1->next), c2->customer->demand(), incr)) { /// et que la fin de r1 aussi
+                                s.is_feasible(*(c1->next), c2->customer->demand(), incr)) { /// et que la fin de r1 aussi
                             Time oldDistance = r1->distance + r2->distance;
                             NodeInfo * precC2 = c2->prev;
                             s.remove(*c2); // Enleve c1 de sa route, la close si necessaire
@@ -325,7 +296,59 @@ void RechLocComplete::operator() (WorkingSolution & s) {
     cout << "coucou on a : " << oldNbRoutes << " routes et " << oldDistance << " km\n";
 }
 
+void RechLocComplete::MetaHeuristique(int maxIter, WorkingSolution & s) {
+// Base sur le multistart
 
+    WorkingSolution actualSol = s; // On conserve une copie de la meilleure actuelle
+    WorkingSolution bestSolD = s; // Meilleur solution en distance
+    WorkingSolution bestSolN = s; // Meilleur solution en nb de tournees
+
+    RechercheLocale loc;
+    int maxLocale = 0;
+
+    unsigned int oldDistance = std::numeric_limits<int>::max();
+    Time actualDistance = s.total_distance();
+
+    for(unsigned int i = 0; i < maxIter; i++) { // On fait l'algo jusqu'a maxIter
+        std::cout << "Etape " << i << std::endl;
+        oldDistance = std::numeric_limits<int>::max();
+
+        // Heuristique d'insertion, les clients sont en shuffle
+        insertion(s);
+        actualDistance = s.total_distance();
+
+        maxLocale = 0;
+        // Tant qu'on ameliore la distance
+        while(actualDistance < oldDistance && maxLocale < 500) {
+            // Sauvegarde anciennes valeurs
+            oldDistance = actualDistance;
+            actualSol = s; // En sortant de la boucle c'est elle qu'on a
+
+            // Recherche locale
+            loc(s);
+
+            //Mise a jour valeurs
+            actualDistance = s.total_distance();
+
+            maxLocale++;
+        }
+
+        if(actualSol.total_distance() < bestSolD.total_distance() || bestSolD.total_distance() == 0) {
+            // Alors j'ai mieux
+            bestSolD = actualSol;
+        }
+
+        if(actualSol.nb_routes() < bestSolN.nb_routes() || bestSolN.total_distance() == 0) {
+            bestSolN = actualSol;
+        }
+
+        actualSol.clear();
+    }
+
+    std::cout << "Meilleur solution en distance : " << bestSolD.total_distance() << " kms" << std::endl;
+    std::cout << "Meilleur solution en nombre de routes : " << bestSolN.nb_routes() << " routes " << std::endl;
+    std::cout << "Ces solutions " << ((bestSolD.total_distance() == bestSolN.total_distance())?"sont egales":"ne sont pas egales") << std::endl;
+}
 
 /*****************************************************************/
 /*****************************************************************/
