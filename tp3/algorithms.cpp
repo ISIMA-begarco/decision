@@ -52,8 +52,44 @@ void insertion (WorkingSolution & sol) {
     }
 
     sol.total_distance() = localDistance;
-//    RechLocComplete loc;
-//    loc(sol);
+    RechLocComplete loc;
+    loc(sol);
+}
+
+void insertion_sorted(WorkingSolution & sol) {
+    vector<NodeInfo> clientsVector;
+    sol.clear();
+
+    // recupere les clients dans le vecteur
+    for (auto & node : sol.nodes()) {
+        if (node.customer->id() != sol.data().depot())
+            clientsVector.push_back(node);
+    }
+
+    // Trie les clients par leur moyenne de fenetre de temps
+    std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
+    //std::random_shuffle(clientsVector.begin(), clientsVector.end());
+
+    list<NodeInfo> clients(clientsVector.begin(), clientsVector.end());
+    //for(auto line : clients)
+    //    cout << "#" << line.customer->id() << endl;
+    Time localDistance = 0;
+    while(!(clients.empty())) { // boucle principale
+        RouteInfo & ri = sol.open_specific_route(clients.front());      // on cree une nouvelle route avec le premier client
+        clients.pop_front();
+        auto toInsert = clients.begin();
+        while((toInsert=rechClientAInserer(clients, toInsert, ri, sol)) != clients.end()) { // on recherche si des clients peuvent etre inseres
+            toInsert->arrival = std::max(ri.depot.prev->arrival+sol.data().distance(ri.depot.prev->customer->id(),toInsert->customer->id()), toInsert->customer->open());
+            sol.insert(*(ri.depot.prev), *toInsert);     // on insere
+            toInsert = clients.erase(toInsert);         // on enleve des clients non desservis
+        }
+        updateDistanceRoute(sol, ri);
+        localDistance += ri.distance;
+    }
+
+    sol.total_distance() = localDistance;
+    RechLocComplete loc;
+    loc(sol);
 }
 
 /** \brief Recherche quel client inserer a la fin d'une tournee
@@ -513,34 +549,20 @@ void RechLocComplete::operator() (WorkingSolution & s) {
 
 void MetaHeuristique(int maxIter, WorkingSolution & s1, WorkingSolution & s2) {
 // Base sur le multistart
-
+    insertion_sorted(s1);
+    s2 = s1;
     WorkingSolution actualSol = s1; // On conserve une copie de la meilleure actuelle
     WorkingSolution bestSolD = s1; // Meilleur solution en distance
-    WorkingSolution bestSolN = s1; // Meilleur solution en nb de tournees
+    WorkingSolution bestSolN = s2; // Meilleur solution en nb de tournees
 
-    RechLocComplete loc;
-    int maxLocale = 0;
+    Time actualDistance = actualSol.total_distance();
 
-    unsigned int oldDistance = std::numeric_limits<int>::max();
-    Time actualDistance = s1.total_distance();
+    actualSol.clear();
 
     for(int i = 0; i < maxIter; i++) { // On fait l'algo jusqu'a maxIter
-        //std::cout << "Etape " << i << std::endl;
-        oldDistance = std::numeric_limits<int>::max();
 
-        // Heuristique d'insertion, les clients sont en shuffle
-        insertion(s1);
-        actualDistance = s1.total_distance();
-
-        // Sauvegarde anciennes valeurs
-        oldDistance = actualDistance;
-        actualSol = s1; // En sortant de la boucle c'est elle qu'on a
-
-        // Recherche locale
-        loc(s1);
-
-        //Mise a jour valeurs
-        actualDistance = s1.total_distance();
+        // Heuristique d'insertion, les clients sont en shuffle puis on applique la recherche locale
+        insertion(actualSol);
 
         if(actualSol.total_distance() < bestSolD.total_distance() || bestSolD.total_distance() == 0) {
             // Alors j'ai mieux

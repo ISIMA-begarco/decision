@@ -32,7 +32,7 @@ inline void report (std::ostream & os, const std::string & method, const Working
 
 
 // function to test the functionalities around WorkingSolution
-void test_solution (const Data & data, const BKR & bkr)
+void test_solution (const Data & data, const BKR & bkr, unsigned iter)
 {
   WorkingSolution sol(data);
   WorkingSolution sol2(data);
@@ -49,7 +49,7 @@ void test_solution (const Data & data, const BKR & bkr)
   {
     //std::cout << "dummy solution" << std::endl;
     start = std::chrono::system_clock::now();
-    MetaHeuristique(1000, sol, sol2);
+    MetaHeuristique(iter, sol, sol2);
     sol.check();
     sol2.check();
     end = std::chrono::system_clock::now();
@@ -65,15 +65,16 @@ void test_solution (const Data & data, const BKR & bkr)
 int main (int argc, char * argv[])
 {
   std::string filename("INSTANCES/rc101.txt");
+  unsigned  iteration = 100;
 
   // check the command line
-  if (argc > 2)
-  {
-    std::cerr << "Error: expecting one single argument (instance name)" << std::endl;
+  if (argc > 3) {
+    std::cerr << "Error: expecting two arguments (instance name, number iteration)" << std::endl;
     return 1;
-  }
-  else if (argc == 2)
-  {
+  } else if (argc == 3) {
+    filename = argv[1];
+    iteration = atoi(argv[2]);
+  } else if (argc == 2) {
     filename = argv[1];
   }
 
@@ -89,7 +90,7 @@ int main (int argc, char * argv[])
   // test the solution functionalities
   if (true)
   {
-    test_solution (data, bkr);
+    test_solution (data, bkr, iteration);
   }
 
   return 0;
