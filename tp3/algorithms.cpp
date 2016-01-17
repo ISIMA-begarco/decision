@@ -30,21 +30,26 @@ void insertion (WorkingSolution & sol) {
     }
     // Trie les clients par leur moyenne de fenetre de temps
     std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
+    //std::random_shuffle(clientsVector.begin(), clientsVector.end());
     std::random_shuffle(clientsVector.begin(), clientsVector.end());
 
     list<NodeInfo> clients(clientsVector.begin(), clientsVector.end());
     //for(auto line : clients)
     //    cout << "#" << line.customer->id() << endl;
-
+    Time localDistance = 0;
     while(!(clients.empty())) { // boucle principale
         RouteInfo & ri = sol.open_specific_route(clients.front());      // on cree une nouvelle route avec le premier client
         clients.pop_front();
         auto toInsert = clients.begin();
         while((toInsert=rechClientAInserer(clients, toInsert, ri, sol)) != clients.end()) { // on recherche si des clients peuvent etre inseres
+            toInsert->arrival = std::max(ri.depot.prev->arrival+sol.data().distance(ri.depot.prev->customer->id(),toInsert->customer->id()), toInsert->customer->open());
             sol.insert(*(ri.depot.prev), *toInsert);     // on insere
             toInsert = clients.erase(toInsert);         // on enleve des clients non desservis
         }
+        updateDistanceRoute(sol, ri);
+        localDistance += ri.distance;
     }
+    sol.total_distance() = localDistance;
     RechLocComplete loc;
     loc(sol);
 }
@@ -101,6 +106,7 @@ list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list
 ///
 /// ATTENTION sol.data(i,j).distance contient le service de i + le trajet i->j
 ///
+///     LES DISTANCES SONT LES TRAJETS + SERVICES PAS LES ATTENTES
 
 /**
     heuristique insertion
@@ -108,6 +114,31 @@ list<NodeInfo>::iterator rechClientAInserer(const list<NodeInfo> & clients, list
     heuristique fusion
 **/
 
+
+
+/*****************************************************************/
+/**         Utile a la modif                                    **/
+/*****************************************************************/
+
+void updateDistanceRoute(WorkingSolution & sol, RouteInfo & route) {
+    NodeInfo * cur = route.depot.next;
+    route.distance = sol.data().distance(route.depot.customer->id(), cur->customer->id());
+
+    while(cur->customer->id() != route.depot.customer->id()) {
+        route.distance += sol.data().distance(cur->customer->id(),cur->next->customer->id());
+        cur = cur->next;
+    }
+}
+
+void updateArrivalRoute(WorkingSolution & sol, RouteInfo & route) {
+    NodeInfo * cur = route.depot.next;
+
+    while(cur->customer->id() != route.depot.customer->id()) {
+        cur->arrival = std::max(cur->prev->arrival+sol.data().distance(cur->customer->id(),cur->prev->customer->id()), cur->customer->open());
+        cur = cur->next;
+    }
+    route.depot.arrival = route.depot.prev->arrival+sol.data().distance(route.depot.prev->customer->id(),route.depot.customer->id());
+}
 
 /*****************************************************************/
 /**         Recherche locale                                    **/
@@ -135,6 +166,7 @@ void Opt2::operator() (WorkingSolution & s) {
                 if(j != i) {                                                                        /// pour tout B
                     NodeInfo * client2 = route2->depot.next;                                        ///
                     while(client2->customer->id() != route2->depot.customer->id() && !optimise) {   ///
+
                         if(
                             (s.data().distance(client->customer->id(),client->next->customer->id()) +
                              s.data().distance(client2->customer->id(),client2->next->customer->id()))
@@ -143,45 +175,44 @@ void Opt2::operator() (WorkingSolution & s) {
                              s.data().distance(client2->customer->id(),client->next->customer->id()))
                           ) {  /// est-ce que l'on gagne du temps ???
                             Load incrCapa = client->load - client2->load;
-                            Time incrTime = client2->arrival + s.data().distance(client2->customer->id(),client->next->customer->id()) - client2->arrival,
-                                 incrTime2 = client->arrival + s.data().distance(client->customer->id(),client2->next->customer->id()) - client->arrival;
+                            Time incrTime = client2->arrival + s.data().distance(client2->customer->id(),client->next->customer->id()) - client->next->arrival,
+                                 incrTime2 = client->arrival + s.data().distance(client->customer->id(),client2->next->customer->id()) - client2->next->arrival;
 
                             if( s.is_feasible(*(client->next), -incrCapa, incrTime) &&
                                 s.is_feasible(*(client2->next), incrCapa, incrTime2)
                               ) {       /// l'echange est-il possible ????
-                                cout << "echange possible" << endl;
-                                cout << "client/load/demand " << client->customer->id()<< "/" << client->load << "/" << client->customer->demand() << endl;
-                                cout << "client/load/demand " << client->next->customer->id()<< "/" << client->next->load << "/" << client->next->customer->demand() << endl;
-                                cout << "client/load/demand " << client2->customer->id()<< "/" << client2->load << "/" << client2->customer->demand() << endl;
-                                cout << "client/load/demand " << client2->next->customer->id()<< "/" << client2->next->load << "/" << client2->next->customer->demand() << endl;
+
                                 /// on fait l'echange
                                 NodeInfo * tmp = client->next;
-                                client->next = client2->next;
-                                client2->next = tmp;
                                 client->next->prev = client2;
                                 client2->next->prev = client;
+                                client->next = client2->next;
+                                client2->next = tmp;
 
-                                /// chainage des bons depots d'arrivee
-                          /*      tmp = route->depot.prev;
-                                route->depot.prev = &(route2->depot);
-                                route2->depot.prev = tmp;
-                                route->depot.prev->next = route->depot.customer->;
-                                route2->depot.prev->next = route2->depot.next->prev;*/
-                                //s.update2(*client);
-                                //s.update2(*client2->next);
+                                /// chainage des bons depots d'arrives
+                                route2->depot.prev->next = &(route->depot);
+                                tmp = route2->depot.prev;
+                                route2->depot.prev = route->depot.prev;
+                                route->depot.prev->next = &(route2->depot);
+                                route->depot.prev = tmp;
+
+                                s.update2(*client);
+                                s.update2(*client2);
+
+                                /// update distances_totales
+                                s.total_distance() -= (route->distance + route2->distance);
+                                updateDistanceRoute(s, *route);
+                                updateDistanceRoute(s, *route2);
+                                s.total_distance() += (route->distance + route2->distance);
 
                                 optimise = true;
-                                cout << "echange effectue" << endl;
-                                cout << "client/load/demand " << client->customer->id()<< "/" << client->load << "/" << client->customer->demand() << endl;
-                                cout << "client/load/demand " << client->next->customer->id()<< "/" << client->next->load << "/" << client->next->customer->demand() << endl;
-                                cout << "client/load/demand " << client2->customer->id()<< "/" << client2->load << "/" << client2->customer->demand() << endl;
-                                cout << "client/load/demand " << client2->next->customer->id()<< "/" << client2->next->load << "/" << client2->next->customer->demand() << endl;
                             }
                         }
 
                         client2 = client2->next;
                     }
                 }
+                route2 = route2->next_;
                 j++;
             }
 
@@ -195,8 +226,20 @@ void Opt2::operator() (WorkingSolution & s) {
 
 /// recherche locale type or opt
 void OrOpt::operator() (WorkingSolution & s) {
-    int i =5;
-    i + 5;
+    RouteInfo * route = s.first();
+    unsigned i = 0, j = 0 ;
+    bool optimise = false;
+
+    while( i < s.nb_routes() ) {
+        NodeInfo * client = route->depot.next;
+        while( client->customer->id() != route->depot.customer->id() ) {
+            //cout << client->customer->id() << " ";
+            client = client->next;
+        }
+        i++;
+        route = route->next_;
+        //cout << endl;
+    }
 }
 
 /// cas particulier de la recherche locale type 2 opt
@@ -208,12 +251,12 @@ void Opt2Etoile::operator() (WorkingSolution & s) {
     while( i < s.nb_routes() ) {
         NodeInfo * client = route->depot.next;
         while( client->customer->id() != route->depot.customer->id() ) {
-            cout << client->customer->id() << " ";
+            //cout << client->customer->id() << " ";
             client = client->next;
         }
         i++;
         route = route->next_;
-        cout << endl;
+        //cout << endl;
     }
 }
 
@@ -233,7 +276,7 @@ RechLocComplete::RechLocComplete() {
 }
 
 void RechLocComplete::operator() (WorkingSolution & s) {
-    unsigned    k = 0,
+    unsigned    k = 0, max = 1,
                 oldNbRoutes = s.nb_routes();
     Time        oldDistance = s.total_distance();
 
@@ -244,6 +287,7 @@ void RechLocComplete::operator() (WorkingSolution & s) {
             k = 0;
             oldNbRoutes = s.nb_routes();
             oldDistance = s.total_distance();
+            max--;
         }
     }
     cout << "coucou on a : " << oldNbRoutes << " routes et " << oldDistance << " km\n";

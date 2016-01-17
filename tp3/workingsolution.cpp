@@ -323,7 +323,7 @@ bool WorkingSolution::check () const
       assert((nodeptr->route == routeptr) && "wrong route pointer");
 
       distance = data_.distance(nodeptr->prev->customer->id(), nodeptr->customer->id());
-      arrival = std::max(arrival, nodeptr->prev->customer->open()) + distance;
+      arrival = std::max(arrival+distance, nodeptr->customer->open());          /// ATTENTION LIGNE MODIFIE
       if (arrival != nodeptr->arrival)
       {
         std::cout << "wrong arrival at node " << nodeptr->customer->id() << " arrival = " << nodeptr->arrival << "   computed = " << arrival << std::endl;
@@ -348,7 +348,8 @@ bool WorkingSolution::check () const
     assert((arrival == nodeptr->arrival) && "wrong arrival time at depot");
     assert((arrival <= nodeptr->customer->close()) && "arriving after closing time at depot");
     cpt_local_distance += distance;
-//    assert(cpt_local_distance == routeptr->distance) && "wrong local distance");
+    //std::cout << "Mauvaise route en jeu " << routeptr->id << " computed: " << cpt_local_distance << " attendu: " << routeptr->distance << std::endl;
+    assert((cpt_local_distance == routeptr->distance) && "wrong local distance");
     assert((load == nodeptr->load) && "wrong total route load");
     if (load > data_.fleetCapacity())
     {
@@ -368,7 +369,7 @@ bool WorkingSolution::check () const
   // check the evaluations
   assert((cpt_routes == nb_routes_) && "wrong number of routes");
   assert((cpt_clients == data_.nb_clients()) && "some unreferenced clients");
-//  std::cout << "total_distance_ = " << total_distance_ << " computed = " << cpt_distance << std::endl;
+  std::cout << "total_distance_ = " << total_distance_ << " computed = " << cpt_distance << std::endl;
   assert((cpt_distance == total_distance_) && "wrong total distance");
 
   // check the free route list
@@ -465,7 +466,7 @@ RouteInfo & WorkingSolution::open_specific_route (NodeInfo & node)
   node.route = routeptr;
   node.load = depot.load = node.customer->demand();
   Id id = node.customer->id();
-  Time dist1 = data_.distance(data_.depot(),id);
+  Time dist1 = std::max(data_.distance(data_.depot(),id), node.customer->open());
   Time time = dist1;
   node.arrival = time;
   if (time < node.customer->open())
@@ -547,8 +548,8 @@ void WorkingSolution::update2 (NodeInfo & node)
   Time time = nodeptr->arrival;
   Load load = nodeptr->load;
   do
-  {
-    time = std::max(time, nodeptr->customer->open()) + data_.distance(nodeptr->customer->id(), nodeptr->next->customer->id());
+  { /// ATTENTION LIGNE SUIVANTE MODIFIEE
+    time = std::max(time + data_.distance(nodeptr->customer->id(), nodeptr->next->customer->id()), nodeptr->next->customer->open());    /// time = std::max(time, nodeptr->customer->open()) + data_.distance(nodeptr->customer->id(), nodeptr->next->customer->id());
     nodeptr = nodeptr->next;
     nodeptr->arrival = time;
     load += nodeptr->customer->demand();
@@ -653,7 +654,6 @@ void WorkingSolution::insert (NodeInfo & prev, NodeInfo & node)
 
   node.route = prev.route;
   update2(prev);
-
   Time delta_dist = data_.distance(prev.customer->id(), id) + data_.distance(id, node.next->customer->id()) - data_.distance(prev.customer->id(), node.next->customer->id());
   node.route->distance += delta_dist;
   total_distance_ += delta_dist;
