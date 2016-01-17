@@ -35,6 +35,7 @@ inline void report (std::ostream & os, const std::string & method, const Working
 void test_solution (const Data & data, const BKR & bkr)
 {
   WorkingSolution sol(data);
+  WorkingSolution sol2(data);
   std::chrono::time_point<std::chrono::system_clock> start, end;
   float duration;
 
@@ -48,11 +49,13 @@ void test_solution (const Data & data, const BKR & bkr)
   {
     //std::cout << "dummy solution" << std::endl;
     start = std::chrono::system_clock::now();
-    insertion (sol);
+    MetaHeuristique(1000, sol, sol2);
     sol.check();
+    sol2.check();
     end = std::chrono::system_clock::now();
     duration = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds> (end - start).count();
-    report(std::cout, "insertion", sol, duration, bkr);
+    report(std::cout, "Meta-Heuristique BARBESANGE & GARCON", sol, duration, bkr);
+    report(std::cout, "Meta-Heuristique BARBESANGE & GARCON", sol2, duration, bkr);
     std::cout << sol << std::endl;
   }
 }

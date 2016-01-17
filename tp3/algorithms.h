@@ -56,6 +56,9 @@ class RechLocComplete {
 
 };
 
+
+void MetaHeuristique(int, WorkingSolution &, WorkingSolution &);
+
 /*****************************************************************/
 /*****************************************************************/
 

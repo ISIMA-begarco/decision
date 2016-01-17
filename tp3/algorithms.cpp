@@ -6,11 +6,12 @@
 #include <algorithm>
 #include <cassert>
 
+#include <cstdlib>
+
 using namespace std;
 
 void dummy (WorkingSolution & sol) {
   sol.clear();
-
 
   for (auto & node: sol.nodes())   {
     if (node.customer->id() != sol.data().depot()) {
@@ -28,8 +29,9 @@ void insertion (WorkingSolution & sol) {
         if (node.customer->id() != sol.data().depot())
             clientsVector.push_back(node);
     }
+
     // Trie les clients par leur moyenne de fenetre de temps
-    std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
+    // std::sort(clientsVector.begin(), clientsVector.end(), CompareMiddleTW());
     std::random_shuffle(clientsVector.begin(), clientsVector.end());
 
     list<NodeInfo> clients(clientsVector.begin(), clientsVector.end());
@@ -48,17 +50,12 @@ void insertion (WorkingSolution & sol) {
         updateDistanceRoute(sol, ri);
         localDistance += ri.distance;
     }
+
     sol.total_distance() = localDistance;
-    RechLocComplete loc;
-    loc(sol);
+//    RechLocComplete loc;
+//    loc(sol);
 }
-/*
-NodeInfo & rechPrec(RouteInfo & tournee, NodeInfo & clients) {
-    NodeInfo & prec = tournee.depot;
-    NodeInfo * cour =
-    while()
-}
-*/
+
 /** \brief Recherche quel client inserer a la fin d'une tournee
  *
  * \param Vecteur contenant les clients tries par moyenne de fenetre de temps
@@ -514,6 +511,54 @@ void RechLocComplete::operator() (WorkingSolution & s) {
     //cout << "coucou on a : " << oldNbRoutes << " routes et " << oldDistance << " km\n";
 }
 
+void MetaHeuristique(int maxIter, WorkingSolution & s1, WorkingSolution & s2) {
+// Base sur le multistart
+
+    WorkingSolution actualSol = s1; // On conserve une copie de la meilleure actuelle
+    WorkingSolution bestSolD = s1; // Meilleur solution en distance
+    WorkingSolution bestSolN = s1; // Meilleur solution en nb de tournees
+
+    RechLocComplete loc;
+    int maxLocale = 0;
+
+    unsigned int oldDistance = std::numeric_limits<int>::max();
+    Time actualDistance = s1.total_distance();
+
+    for(int i = 0; i < maxIter; i++) { // On fait l'algo jusqu'a maxIter
+        //std::cout << "Etape " << i << std::endl;
+        oldDistance = std::numeric_limits<int>::max();
+
+        // Heuristique d'insertion, les clients sont en shuffle
+        insertion(s1);
+        actualDistance = s1.total_distance();
+
+        // Sauvegarde anciennes valeurs
+        oldDistance = actualDistance;
+        actualSol = s1; // En sortant de la boucle c'est elle qu'on a
+
+        // Recherche locale
+        loc(s1);
+
+        //Mise a jour valeurs
+        actualDistance = s1.total_distance();
+
+        if(actualSol.total_distance() < bestSolD.total_distance() || bestSolD.total_distance() == 0) {
+            // Alors j'ai mieux
+            bestSolD = actualSol;
+        }
+
+        if(actualSol.nb_routes() < bestSolN.nb_routes() || bestSolN.total_distance() == 0) {
+            bestSolN = actualSol;
+        }
+
+        actualSol.clear();
+    }
+    s1 = bestSolN;
+    s2 = bestSolD;
+    std::cout << "Meilleur solution en distance : " << bestSolD.distance() << std::endl;
+    std::cout << "Meilleur solution en nombre de routes : " << bestSolN.nb_routes() << " routes " << std::endl;
+    std::cout << "Ces solutions " << ((bestSolD.total_distance() == bestSolN.total_distance())?"sont egales":"ne sont pas egales") << std::endl;
+}
 
 /*****************************************************************/
 /*****************************************************************/
