@@ -109,3 +109,66 @@
 1449832298 source:o:\onedrive\github\decision\tp3\comparemiddletw.cpp
 	"CompareMiddleTW.h"
 
+1453060605 source:c:\users\benji\github\decision\tp3\algorithms.cpp
+	"algorithms.h"
+	"workingsolution.h"
+	"CompareMiddleTW.h"
+	<algorithm>
+	<cassert>
+	<cstdlib>
+
+1453059600 c:\users\benji\github\decision\tp3\algorithms.h
+	<vector>
+	<list>
+	"workingsolution.h"
+
+1448477505 c:\users\benji\github\decision\tp3\workingsolution.h
+	"data.h"
+
+1452949872 c:\users\benji\github\decision\tp3\data.h
+	<string>
+	<iostream>
+	<vector>
+	<list>
+
+1452949872 c:\users\benji\github\decision\tp3\comparemiddletw.h
+	"workingsolution.h"
+
+1448477505 source:c:\users\benji\github\decision\tp3\bkr.cpp
+	"bkr.h"
+	<fstream>
+	<algorithm>
+
+1448477505 c:\users\benji\github\decision\tp3\bkr.h
+	"data.h"
+
+1452949872 source:c:\users\benji\github\decision\tp3\comparemiddletw.cpp
+	"CompareMiddleTW.h"
+
+1448477505 source:c:\users\benji\github\decision\tp3\data.cpp
+	"data.h"
+	<fstream>
+	<sstream>
+	<limits>
+	<cmath>
+	<algorithm>
+	<cassert>
+
+1453059600 source:c:\users\benji\github\decision\tp3\workingsolution.cpp
+	"workingsolution.h"
+	<limits>
+	<algorithm>
+	<cassert>
+	<list>
+	<fstream>
+	<sstream>
+	<cstdlib>
+
+1453060467 source:c:\users\benji\github\decision\tp3\main.cpp
+	"bkr.h"
+	"algorithms.h"
+	<iostream>
+	<iomanip>
+	<chrono>
+	<random>
+

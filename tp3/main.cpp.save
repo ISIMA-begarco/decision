@@ -62,11 +62,18 @@ int main (int argc, char * argv[]) {
 
     // check the command line
     if(argc == 2) { // Juste le filename
-        filename = argv[1];
+      
     } else if (argc == 3) { // filename + maxIter
-        sscanf(argv[2], "%d", &iterMax);
-    } else if (argc > 3) { // Mauvais format
-        std::cerr << "Erreur : format attendu : " << argv[0] << " [fichier] [iterations_max]"<< std::endl;
+    
+    } else { // Rien
+      
+    }
+    
+    if (argc > 2) {
+        std::cerr << "Error: expecting one single argument (instance name)" << std::endl;
+        return 1;
+    } else if (argc == 2) {
+        filename = argv[1];
     }
 
     // load the instance

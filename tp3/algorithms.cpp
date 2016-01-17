@@ -525,7 +525,7 @@ void MetaHeuristique(int maxIter, WorkingSolution & s1, WorkingSolution & s2) {
     Time actualDistance = s1.total_distance();
 
     for(int i = 0; i < maxIter; i++) { // On fait l'algo jusqu'a maxIter
-        //std::cout << "Etape " << i << std::endl;
+        std::cout << "Etape " << i << std::endl;
         oldDistance = std::numeric_limits<int>::max();
 
         // Heuristique d'insertion, les clients sont en shuffle
