@@ -5,8 +5,7 @@
 
 // structure to keep the varying information on the nodes
 struct RouteInfo;
-struct NodeInfo
-{
+struct NodeInfo {
     Customer const * customer;
     Time        arrival; // arrival time at the node
     Load        load;    // load upon arrival
@@ -21,8 +20,7 @@ std::ostream & operator<< (std::ostream &, const NodeInfo &);
 
 
 // structure to keep the varying information on the route
-struct RouteInfo
-{
+struct RouteInfo {
     Id          id;
     NodeInfo    depot;
     Time        distance;
@@ -36,16 +34,15 @@ std::ostream & operator<< (std::ostream &, const RouteInfo &);
 
 
 // Solution to the VRPTW, used to allow fast modifications
-class WorkingSolution
-{
-  public:
+class WorkingSolution {
+public:
     static NodeInfo  * NO_NODE;
     static RouteInfo * NO_ROUTE;
     static const Time REDUCTION_BONUS;
     static const Time BAD_EVAL;
     enum OutputOption {EPS = 0, PDF, PNG, SVG};
 
-  protected:
+protected:
     const Data & data_;
 
     Nvector  nodes_;
@@ -58,7 +55,7 @@ class WorkingSolution
     Time     total_distance_;
     float    cpu_time_;
 
-  public:
+public:
     WorkingSolution (const Data &);          // done
 
     WorkingSolution & operator= (const WorkingSolution &);
@@ -79,19 +76,43 @@ class WorkingSolution
     void update      (NodeInfo &, const Load &, const Time &, RouteInfo *);
     void update2     (NodeInfo &);
 
-    const Data &      data      () const {return data_;}
-    const unsigned &  nb_routes () const {return nb_routes_;}
-          unsigned &  nb_routes ()       {return nb_routes_;}
-          double      distance  () const {return (double(total_distance_ - data_.services()) * 0.01);}
-          Time & total_distance () {return total_distance_;}
-    const float &     cpu_time  () const {return cpu_time_;}
-          float &     cpu_time  ()       {return cpu_time_;}
+    const Data &      data      () const {
+        return data_;
+    }
+    const unsigned &  nb_routes () const {
+        return nb_routes_;
+    }
+    unsigned &  nb_routes ()       {
+        return nb_routes_;
+    }
+    double      distance  () const {
+        return (double(total_distance_ - data_.services()) * 0.01);
+    }
+    Time & total_distance () {
+        return total_distance_;
+    }
+    const float &     cpu_time  () const {
+        return cpu_time_;
+    }
+    float &     cpu_time  ()       {
+        return cpu_time_;
+    }
 
-          Nvector &   nodes     ()                 {return nodes_;}
-    RouteInfo const * first     ()           const {return first_;}
-    RouteInfo       * first     ()                 {return first_;}
-    const NodeInfo *  first     (unsigned r_id) const {return &(depots_[r_id]);}
-    const NodeInfo *  last      (unsigned r_id) const {return &(depots_[r_id]);}
+    Nvector &   nodes     ()                 {
+        return nodes_;
+    }
+    RouteInfo const * first     ()           const {
+        return first_;
+    }
+    RouteInfo       * first     ()                 {
+        return first_;
+    }
+    const NodeInfo *  first     (unsigned r_id) const {
+        return &(depots_[r_id]);
+    }
+    const NodeInfo *  last      (unsigned r_id) const {
+        return &(depots_[r_id]);
+    }
 };
 
 bool operator< (const WorkingSolution &, const WorkingSolution &);

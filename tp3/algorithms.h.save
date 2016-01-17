@@ -2,6 +2,7 @@
 #include <list>
 #include "workingsolution.h"
 
+
 // algorithms on the solution
 void dummy        (WorkingSolution &);
 void insertion    (WorkingSolution &);
@@ -16,52 +17,49 @@ std::list<NodeInfo>::iterator rechClientAInserer(const std::list<NodeInfo> & cli
 
 /// recherche locale type cross
 class RechercheLocale {
-public:
-    virtual void operator() (WorkingSolution & s) {};
+    public: virtual void operator() (WorkingSolution & s) {};
 };
 
 /// recherche locale type cross
 class Cross : public RechercheLocale {
-public:
-    void operator() (WorkingSolution & s);
+    public: void operator() (WorkingSolution & s);
 };
 
 /// recherche locale type 2 opt
 class Opt2 : public RechercheLocale {
-public:
-    void operator() (WorkingSolution & s);
+    public: void operator() (WorkingSolution & s);
 };
 
 /// recherche locale type or opt
 class OrOpt : public RechercheLocale {
-public:
-    void operator() (WorkingSolution & s);
+    public: void operator() (WorkingSolution & s);
 };
 
 /// cas particulier de la recherche locale type 2 opt
 class Opt2Etoile : public RechercheLocale {
-public:
-    void operator() (WorkingSolution & s);
+    public: void operator() (WorkingSolution & s);
 };
 
 /// cas particulier de la recherche locale type or opt
 class OrOptEtoile : public RechercheLocale {
-public:
-    void operator() (WorkingSolution & s);
+    public: void operator() (WorkingSolution & s);
 };
 
 /// recherche locale complete
 class RechLocComplete {
-protected:
-    RechercheLocale * rl[5];
+    protected:
+        RechercheLocale * rl[5];
 
-public:
+    public:
 
-    RechLocComplete();
-    virtual ~RechLocComplete();
-    void operator() (WorkingSolution & s);
+        RechLocComplete();
+        virtual ~RechLocComplete();
+        void operator() (WorkingSolution & s);
 
 };
 
 
 void MetaHeuristique(int, WorkingSolution &, WorkingSolution &);
+
+/*****************************************************************/
+/*****************************************************************/

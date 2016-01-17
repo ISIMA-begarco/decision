@@ -4,8 +4,7 @@
 #include "data.h"
 
 
-struct BKR
-{
+struct BKR {
     static const std::string BKR_FILE;
 
     std::string name_;

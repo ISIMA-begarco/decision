@@ -58,7 +58,7 @@ void test_solution (const Data & data, const BKR & bkr, unsigned iter) {
 // main function
 int main (int argc, char * argv[]) {
     std::string filename("INSTANCES/rc101.txt");
-    unsigned  iteration = 10;
+    unsigned  iteration = 100;
 
     // check the command line
     if (argc > 3) {
